@@ -12,10 +12,16 @@ After being pulled into a whirlpool, Dad and Son find themselves in a strange pl
 
 ## Marsh Ideas
 
-- Scourge Sprites which track you down and attack you based on movement, such as footsteps
-- Small bursts rain that occasionally fall from the ceiling, causing 
+- Scourge Sprites which track you down and attack you based on sounds, such as footsteps
+- Small, localized bursts of rain occasionally fall from the ceiling, causing scourge sprites to congregate in the area where they land
+- Glow-in the dark flowers lead you to where you need to go
+- Immediately after exiting the door "maze", scourge sprites burst through the door and infest the city
 
 ## Pacifica Outline
+
+
+
+## Pacifica End Cutscene
 
 - Player obtains "keys to the city" as a symbolic reward after beating the Scourge
 - Key opens city door, which, after opened, releases water into the city, drowning the inhabitants
