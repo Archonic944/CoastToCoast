@@ -1,0 +1,3 @@
+This is a Godot project using C#, featuring a top-down layout and rpg elements.
+
+When asked to help write a script for a scene or node, read the scene file first. If unsure what the scene file is, you may list files in the res://scenes directory. Take note of all related nodes, such as child nodes and nested scenes, which you may also have to read from disk. The key here is to be as informed as possible not just about the C# code, but about the user's Godot project as well.
