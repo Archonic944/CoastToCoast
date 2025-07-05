@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://lu3osp126pu1"]
+
+[ext_resource type="AudioStream" uid="uid://simhxqwfuoei" path="res://audio/sfx/sci-fi-bubble-pop-89059.mp3" id="1_2vdav"]
+[ext_resource type="Script" uid="uid://su67fw1swcr1" path="res://scenes/Bubble.cs" id="1_b4vvx"]
+[ext_resource type="Texture2D" uid="uid://cgvd8rlhtln5a" path="res://sprites/test/bubble_stolen.png" id="1_pm753"]
+
+[node name="Bubble" type="Node2D"]
+script = ExtResource("1_b4vvx")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_pm753")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_2vdav")

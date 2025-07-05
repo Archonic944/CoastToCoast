@@ -1,12 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://b0ye0idm7fyx4"]
+[gd_scene load_steps=5 format=4 uid="uid://b0ye0idm7fyx4"]
 
 [ext_resource type="PackedScene" uid="uid://b3ughkflkrjp1" path="res://scenes/kid.tscn" id="1_j8ivh"]
+[ext_resource type="PackedScene" uid="uid://b2nd6vme6ys7o" path="res://scenes/mud_tiles.tscn" id="1_nd71p"]
 [ext_resource type="Texture2D" uid="uid://dm7ujsqciyv1q" path="res://sprites/test/test_bg.png" id="2_nd71p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j8ivh"]
 size = Vector2(1021, 101)
 
 [node name="TestScene" type="Node2D"]
+
+[node name="MudTiles" parent="." instance=ExtResource("1_nd71p")]
+tile_map_data = PackedByteArray("AAADAAEAAAACAAEAAAACAAEAAAACAAEAAAAEAAEAAAACAAEAAAABAAEAAAAGAAAAAAABAAIAAAAEAAAAAAAFAAEAAAACAAAAAAACAAAAAAADAAAAAAA=")
 
 [node name="kid" parent="." instance=ExtResource("1_j8ivh")]
 position = Vector2(312, 504)

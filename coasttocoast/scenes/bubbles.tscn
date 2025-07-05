@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://4up2lpvrkr7y"]
+
+[ext_resource type="Script" uid="uid://btkyw4gmw4cml" path="res://scenes/Bubbles.cs" id="1_gt360"]
+[ext_resource type="PackedScene" uid="uid://lu3osp126pu1" path="res://scenes/bubble.tscn" id="2_wdrk5"]
+
+[node name="Bubbles" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gt360")
+
+[node name="Bubble" parent="." instance=ExtResource("2_wdrk5")]
+position = Vector2(32, 36)

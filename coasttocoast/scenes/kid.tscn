@@ -3,6 +3,10 @@
 [ext_resource type="Texture2D" uid="uid://3m36kjb5difp" path="res://sprites/test/kris.png" id="1_844vu"]
 [ext_resource type="Script" uid="uid://be07f7babjgqn" path="res://scenes/Kid.cs" id="1_umm34"]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_do0ta"]
+radius = 36.0
+height = 98.0
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_844vu"]
 atlas = ExtResource("1_844vu")
 region = Rect2(7, 156, 19, 38)
@@ -141,21 +145,24 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_do0ta"]
-radius = 36.0
-height = 140.0
-
 [node name="kiddo" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_umm34")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(0.124994, -76.25)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -49)
+shape = SubResource("CapsuleShape2D_do0ta")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+clip_children = 1
+offset_left = -122.0
+offset_top = -150.0
+offset_right = 137.0
+offset_bottom = 1.0
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="ColorRect"]
+position = Vector2(122, 77)
 scale = Vector2(4.09211, 4.09211)
 sprite_frames = SubResource("SpriteFrames_pwcak")
 animation = &"idle front"
 autoplay = "idle front"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -70)
-shape = SubResource("CapsuleShape2D_do0ta")
