@@ -1,22 +1,77 @@
 using Godot;
-using System;
 
 public partial class Bubbles : Control
 {
-	[Export] public int BubbleCount { get; set; } = 6;
+	public bool Drowning = true;
+	
+	[Export] 
+	public int BubbleCount { get; set; } = 6;
 	// Called when the node enters the scene tree for the first time.
+	private Bubble currentBubble;
 	public override void _Ready()
 	{
-		var bubble = GetNode<Bubble>("Bubble");
+		AddUserSignal("drowned");
+		currentBubble = GetNode<Bubble>("BubblesList/Bubble");
 		for (int i = 0; i < BubbleCount; i++)
 		{
-			if (bubble.Duplicate() is Bubble newBubble)
+			if (currentBubble.Duplicate() is Bubble newBubble)
 			{
-				newBubble.Position += Vector2.Right*40;
-				AddChild(newBubble);
-				bubble = newBubble;
+				newBubble.Position += Vector2.Right*80;
+				GetNode("BubblesList").AddChild(newBubble);
+				currentBubble = newBubble;
 			}
 		}
+
+		if (Drowning)
+		{
+			currentBubble.Shake = true;
+			Timer t = GetNode<Timer>("PopTimer");
+			t.Start();
+			t.Timeout += () =>
+			{
+				if (!Drowning) return;
+				currentBubble.Pop();
+				GetNode<AudioStreamPlayer>("PopSound").Play();
+				Node bList = GetNode("BubblesList");
+				
+				if (bList.GetChildCount() <= 1)
+				{
+					t.Stop();
+					EmitSignal("drowned");
+					FadeOut();
+				}
+				else
+				{
+					currentBubble = bList.GetChild<Bubble>(-2);
+					currentBubble.Shake = true;
+					t.Start();
+				}
+			};
+		}
+	}
+
+	public void FadeIn()
+	{
+		Show();
+		Modulate = Colors.Transparent;
+		Tween t = CreateTween();
+		t.TweenProperty(this, "modulate", Colors.White, 0.5f);
+	}
+
+	public void FadeOut()
+	{
+		Drowning = false;
+		// set bubbles to not shake
+		foreach (Node child in GetNode("BubblesList").GetChildren())
+		{
+			if(child is Bubble bubble)
+			{
+				bubble.Shake = false;
+			}
+		}
+		Tween t = CreateTween();
+		t.TweenProperty(this, "modulate", Colors.Transparent, 0.5f);
+		t.Finished += QueueFree;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -1,7 +1,12 @@
-[gd_scene load_steps=20 format=3 uid="uid://b3ughkflkrjp1"]
+[gd_scene load_steps=26 format=3 uid="uid://b3ughkflkrjp1"]
 
 [ext_resource type="Texture2D" uid="uid://3m36kjb5difp" path="res://sprites/test/kris.png" id="1_844vu"]
 [ext_resource type="Script" uid="uid://be07f7babjgqn" path="res://scenes/Kid.cs" id="1_umm34"]
+[ext_resource type="AudioStream" uid="uid://cq7j16kpbwp07" path="res://audio/sfx/footsteps/st1-footstep-sfx-323053.mp3" id="3_mnfw6"]
+[ext_resource type="AudioStream" uid="uid://bnh60aj0n7on4" path="res://audio/sfx/footsteps/st2-footstep-sfx-323055.mp3" id="4_5xe0b"]
+[ext_resource type="AudioStream" uid="uid://cr460geqcnkq5" path="res://audio/sfx/footsteps/st3-footstep-sfx-323056.mp3" id="5_hsv3e"]
+[ext_resource type="Script" uid="uid://ct1lsnpgeque8" path="res://scenes/Footsteps.cs" id="6_hsv3e"]
+[ext_resource type="AudioStream" uid="uid://chn5iar4p304n" path="res://audio/sfx/footsteps/footsteps-mud-68694.mp3" id="7_o6p4d"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_do0ta"]
 radius = 36.0
@@ -145,6 +150,12 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_o6p4d"]
+streams_count = 3
+stream_0/stream = ExtResource("3_mnfw6")
+stream_1/stream = ExtResource("4_5xe0b")
+stream_2/stream = ExtResource("5_hsv3e")
+
 [node name="kiddo" type="CharacterBody2D"]
 motion_mode = 1
 script = ExtResource("1_umm34")
@@ -166,3 +177,15 @@ scale = Vector2(4.09211, 4.09211)
 sprite_frames = SubResource("SpriteFrames_pwcak")
 animation = &"idle front"
 autoplay = "idle front"
+
+[node name="DrownTimer" type="Timer" parent="."]
+wait_time = 4.0
+
+[node name="Footsteps" type="AudioStreamPlayer" parent="."]
+stream = SubResource("AudioStreamRandomizer_o6p4d")
+pitch_scale = 1.24
+script = ExtResource("6_hsv3e")
+
+[node name="mudFootsteps" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_o6p4d")
+parameters/looping = true

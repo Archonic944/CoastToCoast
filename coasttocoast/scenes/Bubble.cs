@@ -16,22 +16,21 @@ public partial class Bubble : Node2D
 		if (Shake)
 		{
 			var sprite = GetNode<Sprite2D>("Sprite2D");
-			sprite.Position = new Vector2(
-				sprite.Position.X + GD.Randf() * 4 - 2,
-				sprite.Position.Y + GD.Randf() * 4 - 2
+			sprite.Offset = new Vector2(
+				GD.Randf() * 4 - 2,
+				GD.Randf() * 4 - 2
 			);
 		}
 		else
 		{
 			var sprite = GetNode<Sprite2D>("Sprite2D");
-			sprite.Position = Vector2.Zero; // Reset position if not shaking
+			sprite.Offset = Vector2.Zero; // Reset position if not shaking
 		}
 	}
 
 	public void Pop()
 	{
 		GetNode<Sprite2D>("Sprite2D").Hide();
-		GetNode<AudioStreamPlayer>("AudioStreamPlayer").Play();
 		QueueFree();
 	}
 }

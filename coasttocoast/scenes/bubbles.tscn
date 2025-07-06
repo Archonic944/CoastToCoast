@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3 uid="uid://4up2lpvrkr7y"]
+[gd_scene load_steps=4 format=3 uid="uid://4up2lpvrkr7y"]
 
 [ext_resource type="Script" uid="uid://btkyw4gmw4cml" path="res://scenes/Bubbles.cs" id="1_gt360"]
+[ext_resource type="AudioStream" uid="uid://simhxqwfuoei" path="res://audio/sfx/sci-fi-bubble-pop-89059.mp3" id="2_1e6an"]
 [ext_resource type="PackedScene" uid="uid://lu3osp126pu1" path="res://scenes/bubble.tscn" id="2_wdrk5"]
 
 [node name="Bubbles" type="Control"]
@@ -12,5 +13,13 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_gt360")
 
-[node name="Bubble" parent="." instance=ExtResource("2_wdrk5")]
+[node name="PopSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_1e6an")
+
+[node name="PopTimer" type="Timer" parent="."]
+wait_time = 1.5
+
+[node name="BubblesList" type="Node" parent="."]
+
+[node name="Bubble" parent="BubblesList" instance=ExtResource("2_wdrk5")]
 position = Vector2(32, 36)
