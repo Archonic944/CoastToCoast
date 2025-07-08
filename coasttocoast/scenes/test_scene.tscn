@@ -13,7 +13,13 @@ size = Vector2(1021, 101)
 tile_map_data = PackedByteArray("AAADAAEAAAACAAEAAAACAAEAAAACAAEAAAAEAAEAAAACAAEAAAABAAEAAAAGAAAAAAABAAIAAAAEAAAAAAAFAAEAAAACAAAAAAACAAAAAAADAAAAAAA=")
 
 [node name="kid" parent="." instance=ExtResource("1_j8ivh")]
-position = Vector2(312, 504)
+position = Vector2(628, 394)
+
+[node name="Camera2D" type="Camera2D" parent="kid"]
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_horizontal_offset = -0.33
+drag_vertical_offset = -1.0
 
 [node name="TestBg" type="Sprite2D" parent="."]
 z_index = -1
@@ -28,3 +34,5 @@ position = Vector2(622.5, 587.5)
 shape = SubResource("RectangleShape2D_j8ivh")
 
 [node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+
+[node name="UI" type="CanvasLayer" parent="."]

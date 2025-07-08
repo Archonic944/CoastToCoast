@@ -51,7 +51,7 @@ public partial class Kid : CharacterBody2D
 								var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
 								_b = bubblesScene.Instantiate<Bubbles>();
 								_b.FadeIn();
-								GetTree().GetRoot().AddChild(_b);
+								GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI").AddChild(_b);
 							}
 						}
 					}
@@ -86,7 +86,7 @@ public partial class Kid : CharacterBody2D
 		{
 			if (_b != null)
 			{
-				if (_b.IsInsideTree()) _b.FadeOut();
+				if (IsInstanceValid(_b)) _b.FadeOut();
 				_b = null;
 			}
 			animSprite.Offset = Vector2.Zero;
