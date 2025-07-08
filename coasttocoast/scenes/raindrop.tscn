@@ -1,0 +1,178 @@
+[gd_scene load_steps=14 format=3 uid="uid://c7jumfr0anlur"]
+
+[ext_resource type="AudioStream" uid="uid://dmhxrsenjleth" path="res://audio/sfx/raindrops/raindrop_1.mp3" id="1_3qp30"]
+[ext_resource type="Script" uid="uid://do20rsce1vwiw" path="res://scenes/Raindrop.cs" id="1_v82c6"]
+[ext_resource type="AudioStream" uid="uid://dvbmvx33u20uh" path="res://audio/sfx/raindrops/raindrop_2.mp3" id="2_grlj0"]
+[ext_resource type="AudioStream" uid="uid://b5sldu5ekik1y" path="res://audio/sfx/raindrops/raindrop_3.mp3" id="3_v82c6"]
+[ext_resource type="AudioStream" uid="uid://ceam518vum4th" path="res://audio/sfx/raindrops/raindrop_4.mp3" id="4_uefga"]
+[ext_resource type="AudioStream" uid="uid://b2sm4h78o0vfe" path="res://audio/sfx/raindrops/raindrop_5.mp3" id="5_dvt8s"]
+[ext_resource type="Texture2D" uid="uid://dkgdlsu73dl0g" path="res://images/Splash.png" id="6_grlj0"]
+
+[sub_resource type="Curve" id="Curve_fs0he"]
+_data = [Vector2(0.0058651, 0.0427477), 0.0, 0.0, 0, 0, Vector2(1, 0.975908), 2.36371, 1.03475, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_rh3xa"]
+colors = PackedColorArray(0.7, 0.7, 0.7, 0.74902, 0, 0.435251, 0.806845, 0.74902)
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_poj7n"]
+random_pitch = 1.6
+streams_count = 5
+stream_0/stream = ExtResource("1_3qp30")
+stream_1/stream = ExtResource("2_grlj0")
+stream_2/stream = ExtResource("3_v82c6")
+stream_3/stream = ExtResource("4_uefga")
+stream_4/stream = ExtResource("5_dvt8s")
+
+[sub_resource type="Animation" id="Animation_uefga"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Line2D:points")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [PackedVector2Array(4, -29, 0, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:visible")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+
+[sub_resource type="Animation" id="Animation_v82c6"]
+resource_name = "raindrop_splash"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0, 3]
+}
+tracks/1/type = "method"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("RaindropSound")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [0.0],
+"method": &"play"
+}]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.433333),
+"transitions": PackedFloat32Array(1, 0.5),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Line2D:points")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [PackedVector2Array(4, -29, 0, 0), PackedVector2Array(0, 0, 0, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:visible")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dvt8s"]
+_data = {
+&"RESET": SubResource("Animation_uefga"),
+&"raindrop_splash": SubResource("Animation_v82c6")
+}
+
+[node name="Raindrop" type="Node2D"]
+scale = Vector2(7.68, 7.68)
+script = ExtResource("1_v82c6")
+
+[node name="Line2D" type="Line2D" parent="."]
+points = PackedVector2Array(4, -29, 0, 0)
+width = 1.0
+width_curve = SubResource("Curve_fs0he")
+gradient = SubResource("Gradient_rh3xa")
+joint_mode = 2
+end_cap_mode = 2
+
+[node name="RaindropSound" type="AudioStreamPlayer2D" parent="."]
+stream = SubResource("AudioStreamRandomizer_poj7n")
+max_distance = 1139.0
+attenuation = 1.41421
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(-9.53674e-07, 0)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("6_grlj0")
+hframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_dvt8s")
+}
+
+[node name="Timer" type="Timer" parent="."]

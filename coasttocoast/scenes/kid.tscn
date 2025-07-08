@@ -157,6 +157,7 @@ stream_1/stream = ExtResource("4_5xe0b")
 stream_2/stream = ExtResource("5_hsv3e")
 
 [node name="kiddo" type="CharacterBody2D"]
+scale = Vector2(0.412175, 0.412175)
 motion_mode = 1
 script = ExtResource("1_umm34")
 

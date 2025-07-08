@@ -4,7 +4,7 @@ using Godot;
 public partial class Kid : CharacterBody2D
 {
 	public const float Speed = 300.0f;
-	public const float CharacterHeight = 34.5f;
+	public const float CharacterHeight = 30.2f;
 	public const float MudSinkingSecs = 2f;
 	private float _mudSinkingProgress = 0.0f;
 

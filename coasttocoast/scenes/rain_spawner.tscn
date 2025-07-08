@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://d3h2rude1uhho"]
+
+[ext_resource type="Script" uid="uid://bachrpmniwhra" path="res://scenes/RainSpawner.cs" id="1_ctexe"]
+
+[node name="RainSpawner" type="Node2D"]
+script = ExtResource("1_ctexe")
+SpawnInterval = 4.0
+CloudRadius = 20.0
+RaindropSpeed = 40.0
+
+[node name="Timer" type="Timer" parent="."]
