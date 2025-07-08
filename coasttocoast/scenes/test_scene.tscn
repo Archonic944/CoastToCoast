@@ -42,9 +42,3 @@ shape = SubResource("RectangleShape2D_j8ivh")
 
 [node name="RainSpawner" parent="." instance=ExtResource("4_7ddre")]
 TargetPath = NodePath("../kid")
-SpawnInterval = 10.0
-CloudRadius = 300.0
-RaindropCount = 25
-SpawnCenterRadius = 40.0
-RaindropSpeed = 2500.0
-RainHeight = 4000.0

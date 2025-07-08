@@ -4,8 +4,5 @@
 
 [node name="RainSpawner" type="Node2D"]
 script = ExtResource("1_ctexe")
-SpawnInterval = 4.0
-CloudRadius = 20.0
-RaindropSpeed = 40.0
 
 [node name="Timer" type="Timer" parent="."]
