@@ -1,8 +1,7 @@
-[gd_scene load_steps=6 format=4 uid="uid://b0ye0idm7fyx4"]
+[gd_scene load_steps=5 format=4 uid="uid://b0ye0idm7fyx4"]
 
 [ext_resource type="PackedScene" uid="uid://b3ughkflkrjp1" path="res://scenes/kid.tscn" id="1_j8ivh"]
 [ext_resource type="PackedScene" uid="uid://b2nd6vme6ys7o" path="res://scenes/mud_tiles.tscn" id="1_nd71p"]
-[ext_resource type="Texture2D" uid="uid://dm7ujsqciyv1q" path="res://sprites/test/test_bg.png" id="2_nd71p"]
 [ext_resource type="PackedScene" uid="uid://d3h2rude1uhho" path="res://scenes/rain_spawner.tscn" id="4_7ddre"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j8ivh"]
@@ -16,19 +15,13 @@ tile_map_data = PackedByteArray("AAADAAEAAAACAAEAAAACAAEAAAACAAEAAAAEAAEAAAACAAE
 
 [node name="kid" parent="." instance=ExtResource("1_j8ivh")]
 position = Vector2(628, 394)
-scale = Vector2(0.892058, 0.892181)
+scale = Vector2(1, 1)
 
 [node name="Camera2D" type="Camera2D" parent="kid"]
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 drag_horizontal_offset = -0.33
 drag_vertical_offset = -1.0
-
-[node name="TestBg" type="Sprite2D" parent="."]
-z_index = -1
-position = Vector2(609.704, 331.75)
-scale = Vector2(2.19323, 2.20695)
-texture = ExtResource("2_nd71p")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 

@@ -1,10 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://b2nd6vme6ys7o"]
+[gd_scene load_steps=4 format=4 uid="uid://b2nd6vme6ys7o"]
 
-[ext_resource type="Texture2D" uid="uid://drww4shugrkax" path="res://sprites/test/test_mud.png" id="1_j13d7"]
+[ext_resource type="Texture2D" uid="uid://cj6oo0tf8kryw" path="res://sprites/tiles/mud_tileset.png" id="1_j13d7"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_nemd2"]
 texture = ExtResource("1_j13d7")
-texture_region_size = Vector2i(62, 62)
+texture_region_size = Vector2i(64, 64)
 0:0/0 = 0
 0:0/0/terrain_set = 0
 0:0/0/terrain = 0
@@ -77,7 +77,7 @@ texture_region_size = Vector2i(62, 62)
 2:1/0/custom_data_1 = "mud"
 
 [sub_resource type="TileSet" id="TileSet_ijmsk"]
-tile_size = Vector2i(62, 62)
+tile_size = Vector2i(64, 64)
 physics_layer_0/collision_layer = 1
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Terrain 0"
@@ -89,4 +89,5 @@ custom_data_layer_1/type = 4
 sources/0 = SubResource("TileSetAtlasSource_nemd2")
 
 [node name="MudTiles" type="TileMapLayer"]
+tile_map_data = PackedByteArray("AAD/////AAAAAAAAAAAAAP//AAAAAAAAAAAAAP7/AAAAAAAAAAD///7/AAAAAAAAAAD+//7/AAAAAAAAAAD+//3/AAAAAAAAAAA=")
 tile_set = SubResource("TileSet_ijmsk")
