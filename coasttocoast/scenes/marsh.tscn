@@ -5,7 +5,7 @@
 [node name="Marsh" type="Node2D"]
 
 [node name="kiddo" parent="." instance=ExtResource("1_7ohpu")]
-position = Vector2(118, 110)
+position = Vector2(115, 151)
 
 [node name="Camera2D" type="Camera2D" parent="kiddo"]
 drag_horizontal_enabled = true

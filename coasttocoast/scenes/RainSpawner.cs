@@ -21,6 +21,12 @@ public partial class RainSpawner : Node2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		if (TargetPath == null)
+		{
+			GD.PrintErr("TargetPath is not set for RainSpawner. Please set it to the node where rain should fall.");
+			QueueFree();
+			return;
+		}
 		_target = GetNode<Node2D>(TargetPath);
 		_timer = GetNode<Timer>("Timer");
 		//set the timer initially
