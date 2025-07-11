@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://hobnnwfwqkmv"]
+
+[ext_resource type="Texture2D" uid="uid://c7bj0yt67d7ws" path="res://sprites/enemies/hugger.png" id="1_sb6e6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_edf42"]
+radius = 27.0185
+
+[node name="Hugger" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_edf42")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-3, -5)
+texture = ExtResource("1_sb6e6")

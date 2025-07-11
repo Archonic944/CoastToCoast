@@ -157,7 +157,7 @@ stream_1/stream = ExtResource("4_5xe0b")
 stream_2/stream = ExtResource("5_hsv3e")
 
 [node name="kiddo" type="CharacterBody2D"]
-scale = Vector2(0.735798, 0.735798)
+scale = Vector2(0.575798, 0.575798)
 motion_mode = 1
 script = ExtResource("1_umm34")
 
@@ -187,6 +187,32 @@ stream = SubResource("AudioStreamRandomizer_o6p4d")
 pitch_scale = 1.24
 script = ExtResource("6_hsv3e")
 
-[node name="mudFootsteps" type="AudioStreamPlayer" parent="."]
+[node name="Footsteps0" type="AudioStreamPlayer" parent="."]
+editor_description = "mud footsteps, since terrain 0 is mud in the marsh tileset"
 stream = ExtResource("7_o6p4d")
 parameters/looping = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.2, 1.2)
+drag_horizontal_enabled = true
+drag_vertical_enabled = true
+drag_horizontal_offset = -0.33
+drag_vertical_offset = -1.0
+
+[node name="HuggerAttachPoints" type="Node" parent="."]
+editor_description = "Points for the Hugger enemy to attach to"
+
+[node name="0" type="Node2D" parent="HuggerAttachPoints"]
+position = Vector2(0, -58)
+
+[node name="1" type="Node2D" parent="HuggerAttachPoints"]
+position = Vector2(-14, -78)
+
+[node name="2" type="Node2D" parent="HuggerAttachPoints"]
+position = Vector2(7, -4)
+
+[node name="3" type="Node2D" parent="HuggerAttachPoints"]
+position = Vector2(17, -36)
+
+[node name="4" type="Node2D" parent="HuggerAttachPoints"]
+position = Vector2(-18, -23)
