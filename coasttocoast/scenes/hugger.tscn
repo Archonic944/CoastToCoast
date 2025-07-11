@@ -1,11 +1,15 @@
-[gd_scene load_steps=3 format=3 uid="uid://hobnnwfwqkmv"]
+[gd_scene load_steps=4 format=3 uid="uid://hobnnwfwqkmv"]
 
+[ext_resource type="Script" uid="uid://d2omw71nurn8g" path="res://scenes/Hugger.cs" id="1_edf42"]
 [ext_resource type="Texture2D" uid="uid://c7bj0yt67d7ws" path="res://sprites/enemies/hugger.png" id="1_sb6e6"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_edf42"]
 radius = 27.0185
 
 [node name="Hugger" type="CharacterBody2D"]
+motion_mode = 1
+script = ExtResource("1_edf42")
+PlayerTarget = NodePath("")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_edf42")
