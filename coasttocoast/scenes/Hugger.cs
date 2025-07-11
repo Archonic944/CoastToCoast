@@ -18,6 +18,7 @@ public partial class Hugger : CharacterBody2D
 	
 	// Timer for random movement
 	[Export] public float SeekNewDestinationTime = 3.0f;
+	[Export] public float SeekPauseTime = 1.5f; // Pause duration between movements
     
     // Tile size constants based on marsh_tiles.tscn
     private Vector2I TILE_SIZE = new Vector2I(64, 64);
@@ -27,10 +28,20 @@ public partial class Hugger : CharacterBody2D
 	{
 		Seek,
 		Alert,
-		Attack
+		Attack,
+        // Add debug state for testing
+        ForceMove
 	}
-
-	private HuggerState _currentState = HuggerState.Seek;
+	
+	// Additional seek state tracking
+	private enum SeekSubState
+	{
+		Moving,
+		Pausing
+	}
+	
+	private HuggerState _currentState = HuggerState.ForceMove; // Start with force move for debugging
+	private SeekSubState _seekSubState = SeekSubState.Moving; // Sub-state for seek behavior
 	private Vector2 _originalPosition;
 	private Vector2 _targetPosition;
 	private Vector2 _alertSpot;
@@ -38,30 +49,38 @@ public partial class Hugger : CharacterBody2D
 	private int _currentPathIndex = 0;
 	private double _stateTimer = 0.0;
 	private double _seekTimer = 0.0;
+	private double _pauseTimer = 0.0; // Timer for pausing between movements
 	private Vector2I _lastTilePosition;
 	private Random _random = new Random();
-	private TileMapLayer _tileMap;
+	private TileMapLayer _tileMap; // Changed from TileMap to TileMapLayer
 	private Node2D _player;
 	
 	// Tracking of other huggers for cooperative search
 	private List<Hugger> _nearbyHuggers = new List<Hugger>();
 	private List<Vector2I> _searchedTiles = new List<Vector2I>();
 	private bool _isSearchLeader = false;
+    
+    // Debug variables
+    private Vector2 _debugMoveDirection = Vector2.Right;
+    private double _debugDirectionChangeTimer = 0.0;
 
+	// Add a function to switch between states (for testing)
+	[Export] public string DebugState = "ForceMove"; // Can be "ForceMove", "Seek", "Alert", "Attack"
+	
 	public override void _Ready()
 	{
 		// Store original position for returning after alert
 		_originalPosition = GlobalPosition;
 		_targetPosition = _originalPosition;
 		
-		// Get the tilemap
+		// Get the tilemap - try different approaches to finding it
 		if (!TileMapPath.IsEmpty)
 		{
 			_tileMap = GetNode<TileMapLayer>(TileMapPath);
 		}
 		else
 		{
-			// Try to find the tilemap in the parent scene
+			// Try to find the tilemap in the parent scene - try both names we've seen
 			_tileMap = GetTree().GetCurrentScene().GetNodeOrNull<TileMapLayer>("Feature");
 			if (_tileMap == null)
 			{
@@ -71,7 +90,8 @@ public partial class Hugger : CharacterBody2D
 		
 		if (_tileMap == null)
 		{
-			GD.PrintErr("Tilemap not found for Hugger pathfinding.");
+			GD.PrintErr("Hugger: Tilemap not found for pathfinding. Listing available nodes:");
+			ListAvailableNodes(GetTree().GetCurrentScene(), 0);
 		}
 		else 
 		{
@@ -97,31 +117,117 @@ public partial class Hugger : CharacterBody2D
 		
 		if (_player == null)
 		{
-			GD.PrintErr("Player not found for Hugger targeting.");
+			GD.PrintErr("Hugger: Player not found for targeting.");
+		}
+		else
+		{
+			GD.Print("Hugger: Player found at " + _player.GlobalPosition);
 		}
 
-		// Start seeking
-		PickRandomDestination();
+		// Debug print
+		GD.Print("Hugger: Initial position - " + GlobalPosition);
+		
+		// Set initial state from export variable
+		SetDebugState(DebugState);
 		
 		// Add to huggers group for cooperative search
 		AddToGroup("huggers");
 	}
+	
+	// Helper method to list available nodes for debugging
+	private void ListAvailableNodes(Node root, int depth)
+	{
+		if (depth > 5) return; // Avoid going too deep
+		
+		string indent = new string(' ', depth * 2);
+		GD.Print(indent + root.Name + " (" + root.GetType() + ")");
+		
+		foreach (Node child in root.GetChildren())
+		{
+			ListAvailableNodes(child, depth + 1);
+		}
+	}
+	
+	// Method to set the state for debugging
+	private void SetDebugState(string stateName)
+	{
+		switch (stateName.ToLower())
+		{
+			case "forcemove":
+				_currentState = HuggerState.ForceMove;
+				// Debug - test a hard-coded path to see if movement works
+				_currentPath = new List<Vector2>
+				{
+					GlobalPosition + new Vector2(100, 0),
+					GlobalPosition + new Vector2(100, 100),
+					GlobalPosition + new Vector2(0, 100),
+					GlobalPosition
+				};
+				_currentPathIndex = 0;
+				break;
+				
+			case "seek":
+				_currentState = HuggerState.Seek;
+				PickRandomDestination();
+				break;
+				
+			case "alert":
+				_currentState = HuggerState.Alert;
+				// Set an alert spot for testing
+				SwitchToAlertState(GlobalPosition + new Vector2(200, 200));
+				break;
+				
+			case "attack":
+				if (_player != null)
+				{
+					_currentState = HuggerState.Attack;
+					SwitchToAttackState();
+				}
+				else
+				{
+					GD.PrintErr("Cannot set Attack state - no player found");
+					_currentState = HuggerState.ForceMove;
+				}
+				break;
+				
+			default:
+				GD.PrintErr("Unknown debug state: " + stateName);
+				_currentState = HuggerState.ForceMove;
+				break;
+		}
+		
+		GD.Print("Hugger: Set state to " + _currentState);
+	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		if (_tileMap == null || _player == null) return;
-
-		Vector2 velocity = Velocity;
-		
 		// Update timers
-		_stateTimer += delta;
-		_seekTimer += delta;
+        _stateTimer += delta;
+        _seekTimer += delta;
+        _debugDirectionChangeTimer += delta;
+        
+        // Debug print every few seconds
+        if ((int)(_stateTimer * 10) % 20 == 0) // Print every ~2 seconds
+        {
+            GD.Print("Hugger: Current state - " + _currentState + ", Position: " + GlobalPosition);
+            GD.Print("Hugger: Path points: " + _currentPath.Count + ", Current index: " + _currentPathIndex);
+            GD.Print("Hugger: Current velocity: " + Velocity);
+        }
+
+        // Force move debugging state - this will make it move regardless of tilemap or player
+        if (_currentState == HuggerState.ForceMove)
+        {
+            HandleForceMoveState(delta);
+            MoveAndSlide();
+            return;
+        }
 		
-		// Check for player in detection radius
-		Vector2I playerTilePos = GetTilePosition(_player.GlobalPosition);
-		Vector2I currentTilePos = GetTilePosition(GlobalPosition);
-		_lastTilePosition = currentTilePos;
-		
+		if (_tileMap == null || _player == null)
+		{
+			GD.PrintErr("Hugger: Missing tilemap or player reference");
+			return;
+		}
+
 		// State machine logic
 		switch (_currentState)
 		{
@@ -138,16 +244,35 @@ public partial class Hugger : CharacterBody2D
 				break;
 		}
 		
-		// Check for player detection - always check this regardless of state
+		// Check for player detection
+		Vector2I playerTilePos = GetTilePosition(_player.GlobalPosition);
+		Vector2I currentTilePos = GetTilePosition(GlobalPosition);
+		_lastTilePosition = currentTilePos;
+		
 		if (IsPlayerInDetectionRadius(currentTilePos, playerTilePos, AttackDetectionRadius))
 		{
 			SwitchToAttackState();
 		}
 
-		// Apply velocity and move
-		Velocity = velocity;
+		// Apply movement
 		MoveAndSlide();
 	}
+    
+    private void HandleForceMoveState(double delta)
+    {
+        // Change direction every 3 seconds
+        if (_debugDirectionChangeTimer > 3.0)
+        {
+            _debugDirectionChangeTimer = 0;
+            
+            // Rotate 90 degrees
+            _debugMoveDirection = new Vector2(-_debugMoveDirection.Y, _debugMoveDirection.X);
+            GD.Print("Hugger: Changed force move direction to " + _debugMoveDirection);
+        }
+        
+        // Apply a constant velocity in the current debug direction
+        Velocity = _debugMoveDirection * SeekSpeed;
+    }
 
 	private void HandleSeekState(double delta)
 	{
@@ -160,6 +285,25 @@ public partial class Hugger : CharacterBody2D
 		
 		// Follow current path to destination
 		MoveAlongPath(SeekSpeed);
+		
+		// Handle sub-states for seeking
+		switch (_seekSubState)
+		{
+			case SeekSubState.Moving:
+				// Continue moving along the path
+				MoveAlongPath(SeekSpeed);
+				break;
+				
+			case SeekSubState.Pausing:
+				// Pause for a moment before next movement
+				if (_pauseTimer >= SeekPauseTime)
+				{
+					// Resume moving
+					_pauseTimer = 0;
+					_seekSubState = SeekSubState.Moving;
+				}
+				break;
+		}
 	}
 
 	private void HandleAlertState(double delta)
@@ -487,39 +631,60 @@ public partial class Hugger : CharacterBody2D
 	private bool IsTileValidForMovement(Vector2I tile)
 	{
 		// Check if the tilemap exists
-		if (_tileMap == null) return false;
-		
-		// Get the tile data
-		TileData tileData = _tileMap.GetCellTileData(tile);
-		
-		// If there's no tile data, the tile is invalid
-		if (tileData == null) return false;
-		
-		// Check if this tile has custom data for movement speed
-		Variant customData = tileData.GetCustomData("MoveSpeed");
-		if (customData.VariantType == Variant.Type.Float)
+		if (_tileMap == null)
 		{
-			// If the movement speed is 0 or negative, the tile is not valid for movement
-			float moveSpeed = customData.AsSingle();
-			if (moveSpeed <= 0f) return false;
+			GD.PrintErr("Hugger: TileMap is null in IsTileValidForMovement");
+			return true; // Allow movement if no tilemap (for debugging)
 		}
 		
-		// Check if the tile has collision
-		// This assumes that collision shapes on tiles would make them impassable
-		bool hasCollision = false;
-		for (int i = 0; i < tileData.GetCollisionPolygonsCount(0); i++)
+		try
 		{
-			hasCollision = true;
-			break;
+			// Get the tile data - fixed to be consistent with TileMapLayer methods
+			TileData tileData = _tileMap.GetCellTileData(tile);
+			
+			// If there's no tile data, the tile may still be valid (empty tile)
+			if (tileData == null)
+			{
+				// For debugging, assume empty tiles are valid
+				return true;
+			}
+			
+			// Hugger is a floating creature, so we ignore MoveSpeed constraints
+			// Only check for collision
+			bool hasCollision = false;
+			try
+			{
+				for (int i = 0; i < tileData.GetCollisionPolygonsCount(0); i++)
+				{
+					hasCollision = true;
+					break;
+				}
+			}
+			catch (Exception e)
+			{
+				GD.PrintErr("Error checking collision: " + e.Message);
+				// Assume no collision if there's an error
+				hasCollision = false;
+			}
+			
+			if (hasCollision) 
+			{
+				GD.Print("Tile at " + tile + " has collision, avoiding");
+				return false;
+			}
+			
+			// Tile is valid for movement by the floating Hugger
+			return true;
 		}
-		
-		if (hasCollision) return false;
-		
-		// If we got here, the tile is valid for movement
-		return true;
+		catch (Exception e)
+		{
+			// If there's an error, log it and allow movement (for debugging)
+			GD.PrintErr("Error in IsTileValidForMovement: " + e.Message + " for tile " + tile);
+			return true;
+		}
 	}
-
-	private Vector2I GetTilePosition(Vector2 worldPos)
+    
+    private Vector2I GetTilePosition(Vector2 worldPos)
 	{
 		if (_tileMap == null) return Vector2I.Zero;
 		return _tileMap.LocalToMap(_tileMap.ToLocal(worldPos));
@@ -661,3 +826,4 @@ public partial class Hugger : CharacterBody2D
 		});
 	}
 }
+

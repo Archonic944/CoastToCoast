@@ -17,7 +17,9 @@ position = Vector2(118, -521)
 FunctionalTileMapLayer = NodePath("../Feature")
 
 [node name="Hugger" parent="." instance=ExtResource("1_rkyai")]
+position = Vector2(0, 37)
 PlayerTarget = NodePath("../kiddo")
 TileMapPath = NodePath("../Feature")
+DebugState = "Seek"
 
 [node name="UI" type="CanvasLayer" parent="."]
