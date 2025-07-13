@@ -1,10 +1,11 @@
-[gd_scene load_steps=10 format=3 uid="uid://cjlste8g0ioy0"]
+[gd_scene load_steps=11 format=3 uid="uid://cjlste8g0ioy0"]
 
 [ext_resource type="Script" uid="uid://ciiq68c2g8ll" path="res://scenes/ChestPiece.cs" id="1_0m5o8"]
 [ext_resource type="AudioStream" uid="uid://dksy1ytvrxuw6" path="res://audio/sfx/whoosh.mp3" id="1_mwcu6"]
 [ext_resource type="AudioStream" uid="uid://46y7k5uw2pn2" path="res://audio/sfx/whoosh_extended.mp3" id="2_xe350"]
 [ext_resource type="Texture2D" uid="uid://duxx670diye4x" path="res://sprites/test/chest_pieces.png" id="3_0m5o8"]
 [ext_resource type="AudioStream" uid="uid://cur5ctaesp0yo" path="res://sprites/test/Pickup_Coin.mp3" id="5_1m7ct"]
+[ext_resource type="AudioStream" uid="uid://ccv4yfqcj6f3k" path="res://sprites/test/white_bush_shaken.mp3" id="5_heo21"]
 
 [sub_resource type="Animation" id="Animation_mwcu6"]
 resource_name = "spin"
@@ -64,6 +65,9 @@ hframes = 4
 libraries = {
 &"": SubResource("AnimationLibrary_0m5o8")
 }
+
+[node name="WhiteBushShaken" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_heo21")
 
 [node name="PickupPiece" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_1m7ct")

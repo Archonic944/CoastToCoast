@@ -62,6 +62,13 @@ public partial class Kid : CharacterBody2D
 		{
 			TryInteract();
 		}
+		if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left && mb.Pressed)
+		{
+			if (ChestPieces > 0)
+			{
+				ThrowChestPiece(GetGlobalMousePosition());
+			}
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -243,5 +250,16 @@ public partial class Kid : CharacterBody2D
 			_footstepsSound.Stop();
 		if (_animatedSprite.IsPlaying())
 			_animatedSprite.Stop();
+	}
+
+	// Method to spawn and throw a chest piece
+	private void ThrowChestPiece(Vector2 targetPosition)
+	{
+		ChestPieces--;
+		var chestScene = GD.Load<PackedScene>("res://scenes/chest_piece.tscn");
+		var chest = chestScene.Instantiate<ChestPiece>();
+		GetTree().GetCurrentScene().AddChild(chest);
+		chest.GlobalPosition = GlobalPosition;
+		chest.StartThrow(targetPosition);
 	}
 }

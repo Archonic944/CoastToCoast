@@ -821,5 +821,10 @@ public partial class Hugger : CharacterBody2D
 			return angle < startAngle || angle >= endAngle;
 		});
 	}
+	
+	// Called when an external alert occurs (e.g., chest piece landing)
+	public void Alert(Vector2 alertPosition)
+	{
+		SwitchToAlertState(alertPosition);
+	}
 }
-
