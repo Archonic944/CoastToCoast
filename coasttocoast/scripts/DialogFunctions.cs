@@ -31,4 +31,13 @@ public partial class DialogFunctions : Node
 			cb?.GetNodeOrNull<StaticBody2D>("StaticBody2D")?.QueueFree();
 		};
 	}
+
+	public void PickupChestPieces()
+	{
+		var marsh = GetTree().Root.GetNode("Marsh");
+		var chest = marsh.GetNode<ChestBreak>("ChestBreak");
+		chest.GetNode<Sprite2D>("ChestSprite").Hide();
+		chest.GetNode<AudioStreamPlayer2D>("ItemPickup").Play();
+		marsh.GetNode<Kid>("kiddo").ChestPieces = 4;
+	}
 }

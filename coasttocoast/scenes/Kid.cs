@@ -27,6 +27,8 @@ public partial class Kid : CharacterBody2D
 	private Area2D _interactLeft;
 	private Area2D _interactRight;
 
+	public sbyte ChestPieces = -1; // -1 means you haven't triggered the chest break cutscene yet
+
 	public override void _Ready()
 	{
 		_footstepsSound = GetNode<AudioStreamPlayer>("Footsteps");

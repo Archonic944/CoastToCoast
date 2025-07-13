@@ -24,7 +24,7 @@ texture = ExtResource("2_3rtt2")
 hframes = 2
 region_rect = Rect2(0, 0, 128, 86)
 
-[node name="CoinPickup" type="AudioStreamPlayer2D" parent="."]
+[node name="ItemPickup" type="AudioStreamPlayer2D" parent="."]
 stream = ExtResource("3_3rtt2")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
