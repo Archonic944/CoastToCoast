@@ -235,6 +235,8 @@ public partial class Kid : CharacterBody2D
 
 	private void OnDialogueStarted(Resource dialogueResource)
 	{
+		// stop movement
+		_inputDirection = Vector2.Zero;
 		if (_footstepsSound.Playing)
 			_footstepsSound.Stop();
 		if (_animatedSprite.IsPlaying())

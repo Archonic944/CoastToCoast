@@ -18,7 +18,7 @@ public partial class DialogFunctions : Node
 		var marsh = GetTree().Root.GetNode("Marsh");
 		marsh.GetNode<AnimationPlayer>("kiddo/AnimationPlayer").Play("spin");
 		//wait 0.8 seconds to do the chest break
-		GetTree().CreateTimer(0.35f).Timeout += () =>
+		GetTree().CreateTimer(0.28f).Timeout += () =>
 		{
 			var cb = marsh.GetNode<ChestBreak>("ChestBreak");
 			var cs = cb?.GetNodeOrNull<Sprite2D>("ChestSprite");
