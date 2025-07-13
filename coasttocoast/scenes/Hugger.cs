@@ -119,13 +119,9 @@ public partial class Hugger : CharacterBody2D
 		{
 			GD.PrintErr("Hugger: Player not found for targeting.");
 		}
-		else
-		{
-			GD.Print("Hugger: Player found at " + _player.GlobalPosition);
-		}
 
 		// Debug print
-		GD.Print("Hugger: Initial position - " + GlobalPosition);
+		//GD.Print("Hugger: Initial position - " + GlobalPosition);
 		
 		// Set initial state from export variable
 		SetDebugState(DebugState);
@@ -196,7 +192,7 @@ public partial class Hugger : CharacterBody2D
 				break;
 		}
 		
-		GD.Print("Hugger: Set state to " + _currentState);
+		//GD.Print("Hugger: Set state to " + _currentState);
 	}
 
 	public override void _PhysicsProcess(double delta)
@@ -209,9 +205,9 @@ public partial class Hugger : CharacterBody2D
         // Debug print every few seconds
         if ((int)(_stateTimer * 10) % 20 == 0) // Print every ~2 seconds
         {
-            GD.Print("Hugger: Current state - " + _currentState + ", Position: " + GlobalPosition);
-            GD.Print("Hugger: Path points: " + _currentPath.Count + ", Current index: " + _currentPathIndex);
-            GD.Print("Hugger: Current velocity: " + Velocity);
+            //GD.Print("Hugger: Current state - " + _currentState + ", Position: " + GlobalPosition);
+            //GD.Print("Hugger: Path points: " + _currentPath.Count + ", Current index: " + _currentPathIndex);
+            //GD.Print("Hugger: Current velocity: " + Velocity);
         }
 
         // Force move debugging state - this will make it move regardless of tilemap or player

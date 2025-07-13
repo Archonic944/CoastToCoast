@@ -1,0 +1,17 @@
+~ start
+Chesty: Hey there! I'm Chesty the chest.
+Dad: ...
+Dad: Can I, uhh, open you?
+Chesty: [[Nope|Nuh-uh|Not a chance]], fella! I'm [color=yellow] locked. You have to find the magic-
+Dad: Seriously? You look like you're built out of those planks that are meant for little kids to karate chop at birthday parties.
+- "Open" him
+	Chest: H- Hey! Watch it!
+	Dad: SAY GOODBYE CHESTFACE
+	do DialogFunctions.TriggerChestBreak()
+	[wait=2.0]
+	Dad: Hahaha YES that was awesome, dude. I feel so alive right now.
+- Spare him
+	Chesty: What on God's green Earth do you mean by that?!
+	Dad: Ha... nothing. Carry on... uh, Chester.
+	Chesty: Chesty.
+=> END

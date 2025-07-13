@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://b80to0qw6s5uk"
+path="res://.godot/imported/ChestBreak.dialogue-bb796533fabc92c8e695b91b724e5484.tres"
+
+[deps]
+
+source_file="res://dialogue/ChestBreak.dialogue"
+dest_files=["res://.godot/imported/ChestBreak.dialogue-bb796533fabc92c8e695b91b724e5484.tres"]
+
+[params]
+
+defaults=true

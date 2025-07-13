@@ -1,5 +1,6 @@
 using System;
 using Godot;
+using DialogueManagerRuntime;
 
 public partial class Kid : CharacterBody2D
 {
@@ -15,22 +16,55 @@ public partial class Kid : CharacterBody2D
 	private TileMapLayer _ftml;
 	// increment per second
 	private Vector2 _lastDirection = Vector2.Right;
+	private Vector2 _inputDirection = Vector2.Zero;
 
 	private AudioStreamPlayer _footstepsSound;
+	private AnimatedSprite2D _animatedSprite;
+	
+	// Interaction nodes
+	private Area2D _interactUp;
+	private Area2D _interactDown;
+	private Area2D _interactLeft;
+	private Area2D _interactRight;
 
 	public override void _Ready()
 	{
 		_footstepsSound = GetNode<AudioStreamPlayer>("Footsteps");
+		_animatedSprite = GetNode<AnimatedSprite2D>("ColorRect/AnimatedSprite2D");
 		_ftml = GetNode<TileMapLayer>(FunctionalTileMapLayer);
 		if (_ftml == null)
 		{
 			GD.PrintErr("FunctionalTileMapLayer not set or invalid. Please set it in the inspector.");
 		}
+		
+		// Get the interaction areas
+		_interactUp = GetNode<Area2D>("Interacts/Up");
+		_interactDown = GetNode<Area2D>("Interacts/Down");
+		_interactLeft = GetNode<Area2D>("Interacts/Left");
+		_interactRight = GetNode<Area2D>("Interacts/Right");
+
+		DialogueManager.DialogueStarted += OnDialogueStarted;
+	}
+
+	public override void _UnhandledInput(InputEvent @event)
+	{
+		// Handle movement input
+		_inputDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
+		
+		// If we detect any movement input, update last direction only if we're actually moving
+		if (_inputDirection != Vector2.Zero)
+		{
+			_lastDirection = _inputDirection;
+		}
+		if (@event.IsActionPressed("ui_accept"))
+		{
+			TryInteract();
+		}
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
-		var animSprite = GetNode<AnimatedSprite2D>("ColorRect/AnimatedSprite2D");
+		var animSprite = _animatedSprite; // replaced local GetNode
 		var inMud = false;
 		float moveSpeedMultiplier = 1.0f;
 		if (_ftml != null)
@@ -104,12 +138,12 @@ public partial class Kid : CharacterBody2D
 			MudSinkingProgress = 0.0f; // Reset sinking progress when not in mud
 		}
 		
-		Vector2 direction = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		Velocity = direction * Speed * moveSpeedMultiplier;
+		// Apply movement based on input direction
+		Velocity = _inputDirection * Speed * moveSpeedMultiplier;
 		MoveAndSlide();
 
 		// Animation logic
-		if (direction == Vector2.Zero)
+		if (_inputDirection == Vector2.Zero)
 		{
 			// Idle animations
 			if (Mathf.Abs(_lastDirection.Y) > Mathf.Abs(_lastDirection.X))
@@ -132,9 +166,9 @@ public partial class Kid : CharacterBody2D
 		else
 		{
 			// Walk animations
-			if (Mathf.Abs(direction.Y) > Mathf.Abs(direction.X))
+			if (Mathf.Abs(_inputDirection.Y) > Mathf.Abs(_inputDirection.X))
 			{
-				if (direction.Y < 0)
+				if (_inputDirection.Y < 0)
 					animSprite.Play("walk back");
 				else
 					animSprite.Play("walk front");
@@ -142,13 +176,68 @@ public partial class Kid : CharacterBody2D
 			else
 			{
 				animSprite.Play("walk side");
-				animSprite.FlipH = direction.X < 0;
+				animSprite.FlipH = _inputDirection.X < 0;
 			}
-			_lastDirection = direction;
 			if(!_footstepsSound.Playing)
 			{
 				_footstepsSound.Play();
 			}
 		}
+	}
+	
+	private void TryInteract()
+	{
+		// Get the appropriate interaction area based on facing direction
+		Area2D activeArea = GetActiveInteractArea();
+		
+		// Check for overlapping areas
+		foreach (var area in activeArea.GetOverlappingAreas())
+		{
+			var parent = area.GetParent();
+			if (parent is Interactable interactable)
+			{
+				interactable.Interact(this);
+				return;
+			}
+		}
+		
+		foreach (var body in activeArea.GetOverlappingBodies())
+		{
+			// Try the body itself first
+			if (body is Interactable interactable)
+			{
+				interactable.Interact(this);
+				return;
+			}
+			
+			// Try its parent
+			var parent = body.GetParent();
+			if (parent is Interactable parentInteractable)
+			{
+				parentInteractable.Interact(this);
+				return;
+			}
+		}
+	}
+	
+	private Area2D GetActiveInteractArea()
+	{
+		// Determine active area based on the last direction
+		if (Mathf.Abs(_lastDirection.Y) > Mathf.Abs(_lastDirection.X))
+		{
+			return _lastDirection.Y < 0 ? _interactUp : _interactDown;
+		}
+		else
+		{
+			return _lastDirection.X < 0 ? _interactLeft : _interactRight;
+		}
+	}
+
+	private void OnDialogueStarted(Resource dialogueResource)
+	{
+		if (_footstepsSound.Playing)
+			_footstepsSound.Stop();
+		if (_animatedSprite.IsPlaying())
+			_animatedSprite.Stop();
 	}
 }
