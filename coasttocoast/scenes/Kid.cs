@@ -27,7 +27,8 @@ public partial class Kid : CharacterBody2D
 	private Area2D _interactLeft;
 	private Area2D _interactRight;
 
-	public sbyte ChestPieces = -1; // -1 means you haven't triggered the chest break cutscene yet
+	//public sbyte ChestPieces = -1; // -1 means you haven't triggered the chest break cutscene yet
+	public sbyte ChestPieces = 4; //TODO DEBUG
 
 	public override void _Ready()
 	{
@@ -259,6 +260,7 @@ public partial class Kid : CharacterBody2D
 		var chestScene = GD.Load<PackedScene>("res://scenes/chest_piece.tscn");
 		var chest = chestScene.Instantiate<ChestPiece>();
 		GetTree().GetCurrentScene().AddChild(chest);
+		chest.GetNode<Sprite2D>("Sprite2D")?.SetFrame(ChestPieces);
 		chest.GlobalPosition = GlobalPosition;
 		chest.StartThrow(targetPosition);
 	}

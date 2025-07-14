@@ -158,27 +158,16 @@ stream_2/stream = ExtResource("5_hsv3e")
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hsv3e"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_o6p4d"]
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hsv3e"]
+radius = 15.6305
+height = 76.4157
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_6qa52"]
 radius = 17.3672
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_8uqmb"]
-
-[sub_resource type="Animation" id="Animation_hsv3e"]
-resource_name = "spin"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("ColorRect:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.333333),
-"transitions": PackedFloat32Array(0.574349, 0.287175),
-"update": 0,
-"values": [0.0, 6.28319]
-}
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_o6p4d"]
+radius = 17.3672
+height = 79.8891
 
 [sub_resource type="Animation" id="Animation_o6p4d"]
 length = 0.001
@@ -195,6 +184,21 @@ tracks/0/keys = {
 "values": [0.0]
 }
 
+[sub_resource type="Animation" id="Animation_hsv3e"]
+resource_name = "spin"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("ColorRect:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.333333),
+"transitions": PackedFloat32Array(0.574349, 0.287175),
+"update": 0,
+"values": [0.0, 6.28319]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_6qa52"]
 _data = {
 &"RESET": SubResource("Animation_o6p4d"),
@@ -202,6 +206,7 @@ _data = {
 }
 
 [node name="kiddo" type="CharacterBody2D"]
+z_index = 2
 scale = Vector2(0.575798, 0.575798)
 motion_mode = 1
 script = ExtResource("1_umm34")
@@ -238,7 +243,7 @@ stream = ExtResource("7_o6p4d")
 parameters/looping = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(1.2, 1.2)
+zoom = Vector2(0.95, 0.95)
 drag_horizontal_enabled = true
 drag_vertical_enabled = true
 drag_horizontal_offset = -0.33
@@ -281,7 +286,9 @@ collision_mask = 16
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interacts/Right"]
-shape = SubResource("CircleShape2D_o6p4d")
+position = Vector2(19.104, -3.47348)
+rotation = -1.57079
+shape = SubResource("CapsuleShape2D_hsv3e")
 
 [node name="Up" type="Area2D" parent="Interacts"]
 position = Vector2(0, -133.727)
@@ -299,7 +306,9 @@ collision_mask = 16
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interacts/Left"]
-shape = SubResource("CircleShape2D_8uqmb")
+position = Vector2(-20.8407, -3.47348)
+rotation = -1.57079
+shape = SubResource("CapsuleShape2D_o6p4d")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

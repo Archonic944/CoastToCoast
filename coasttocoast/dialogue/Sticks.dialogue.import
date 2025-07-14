@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://cxuoqvt8rotxt"
+path="res://.godot/imported/Sticks.dialogue-f5ba8ddf0b00a32a22a7bbee19ec5369.tres"
+
+[deps]
+
+source_file="res://dialogue/Sticks.dialogue"
+dest_files=["res://.godot/imported/Sticks.dialogue-f5ba8ddf0b00a32a22a7bbee19ec5369.tres"]
+
+[params]
+
+defaults=true

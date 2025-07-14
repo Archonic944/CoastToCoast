@@ -1,0 +1,11 @@
+~ before_sticks
+Dad: Uh-oh, I bet those sticks are going to make a [color=red]lot of noise.[/color]
+Dad: Guess I need to walk through all that [wave][color=brown]mud[/color][/wave] to avoid them...
+=> END
+
+~ after_sticks
+Sticks: I'm the sticks… Rustle rustle…
+Dad: "Rustle rustle"?! What the hell?! Can everything talk in this world?!
+Sticks: Rustle rustle rustle…
+Dad: (Guess I didn't need to walk through the mud after all.)
+=> END

@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections;
 using System.Linq;
 
 public partial class ChestPiece : Node2D, Interactable
@@ -65,7 +66,7 @@ public partial class ChestPiece : Node2D, Interactable
 	private void CheckTerrainAndAlert()
 	{
 		var scene = GetTree().GetCurrentScene();
-		var tml = scene.GetNode<TileMapLayer>("MarshTiles");
+		var tml = scene.GetNode<TileMapLayer>("Feature");
 		if (tml != null)
 		{
 			var cell = tml.LocalToMap(tml.ToLocal(GlobalPosition));
@@ -73,13 +74,7 @@ public partial class ChestPiece : Node2D, Interactable
 			if (tileData != null && tileData.GetTerrain() == TerrainType.Leaves)
 			{
 				// play bush shake sound
-				var shakeStream = GD.Load<AudioStream>("res://audio/sfx/WhiteBushShaken.mp3");
-				var shakePlayer = new AudioStreamPlayer2D
-				{
-					Stream = shakeStream,
-					GlobalPosition = GlobalPosition
-				};
-				scene.AddChild(shakePlayer);
+				var shakePlayer = GetNode<AudioStreamPlayer2D>("WhiteBushShaken");
 				shakePlayer.Play();
 				// alert nearest huggers
 				var huggers = GetTree().GetNodesInGroup("huggers").OfType<Hugger>()
@@ -95,10 +90,20 @@ public partial class ChestPiece : Node2D, Interactable
 	{
 		if (!_thrown)
 		{
+			GetNode<Area2D>("Area2D").Monitorable = false;
 			GetNode<AudioStreamPlayer>("PickupPiece").Play();
 			if (player is Kid kid)
 				kid.ChestPieces++;
-			QueueFree();
+			// Pickup animation (tween chest piece to scale smaller and smaller and move towards player)
+			var tween = CreateTween();
+			tween.SetParallel();
+			tween.TweenProperty(this, "scale", new Vector2(0.1f, 0.1f), 0.3f)
+				.SetTrans(Tween.TransitionType.Sine)
+				.SetEase(Tween.EaseType.Out);
+			tween.TweenProperty(this, "position", player.GlobalPosition, 0.3f)
+				.SetTrans(Tween.TransitionType.Sine)
+				.SetEase(Tween.EaseType.Out);
+			tween.Finished += QueueFree;
 		}
 	}
 }

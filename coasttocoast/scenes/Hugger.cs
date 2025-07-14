@@ -13,8 +13,8 @@ public partial class Hugger : CharacterBody2D
 	// Search radius parameters
 	[Export] public int MinSearchRadius = 2;
 	[Export] public int MaxSearchRadius = 4;
-	[Export] public int AlertSearchRadius = 6;
-	[Export] public int AttackDetectionRadius = 3;
+	[Export] public int AlertSearchRadius = 3;
+	[Export] public int AttackDetectionRadius = 2;
 	
 	// Timer for random movement
 	[Export] public float SeekNewDestinationTime = 3.0f;
@@ -241,14 +241,22 @@ public partial class Hugger : CharacterBody2D
 		}
 		
 		// Check for player detection
-		Vector2I playerTilePos = GetTilePosition(_player.GlobalPosition);
-		Vector2I currentTilePos = GetTilePosition(GlobalPosition);
-		_lastTilePosition = currentTilePos;
-		
-		if (IsPlayerInDetectionRadius(currentTilePos, playerTilePos, AttackDetectionRadius))
-		{
-			SwitchToAttackState();
-		}
+        Vector2I playerTilePos = GetTilePosition(_player.GlobalPosition);
+        Vector2I currentTilePos = GetTilePosition(GlobalPosition);
+        _lastTilePosition = currentTilePos;
+
+        // Skip detection if player is fully sunk in mud
+        if (_player is Kid kid && kid.MudSinkingProgress >= 1.0f)
+        {
+            // Player is undetectable when fully sunk. Do something here maybe...?
+        }
+        else
+        {
+            if (IsPlayerInDetectionRadius(currentTilePos, playerTilePos, AttackDetectionRadius))
+            {
+                SwitchToAttackState();
+            }
+        }
 
 		// Apply movement
 		MoveAndSlide();
