@@ -2,11 +2,12 @@ using System;
 using Godot;
 using DialogueManagerRuntime;
 
+
 public partial class Kid : CharacterBody2D
 {
-	[Export] private NodePath FunctionalTileMapLayer;
-    // This is the main character of the game, the kid.
-    private const float Speed = 300.0f;
+	[Export] private NodePath _functionalTileMapLayer;
+	// This is the main character of the game, the kid.
+	private const float Speed = 300.0f;
 	private const float CharacterHeight = 30.2f;
 	private const float MudSinkingSecs = 2f;
 	public float MudSinkingProgress = 0.0f;
@@ -20,7 +21,7 @@ public partial class Kid : CharacterBody2D
 
 	private AudioStreamPlayer _footstepsSound;
 	private AnimatedSprite2D _animatedSprite;
-	
+		
 	// Interaction nodes
 	private Area2D _interactUp;
 	private Area2D _interactDown;
@@ -36,12 +37,12 @@ public partial class Kid : CharacterBody2D
 	{
 		_footstepsSound = GetNode<AudioStreamPlayer>("Footsteps");
 		_animatedSprite = GetNode<AnimatedSprite2D>("ColorRect/AnimatedSprite2D");
-		_ftml = GetNode<TileMapLayer>(FunctionalTileMapLayer);
+		_ftml = GetNode<TileMapLayer>(_functionalTileMapLayer);
 		if (_ftml == null)
 		{
 			GD.PrintErr("FunctionalTileMapLayer not set or invalid. Please set it in the inspector.");
 		}
-		
+			
 		// Get the interaction areas
 		_interactUp = GetNode<Area2D>("Interacts/Up");
 		_interactDown = GetNode<Area2D>("Interacts/Down");
@@ -55,7 +56,7 @@ public partial class Kid : CharacterBody2D
 	{
 		// Handle movement input
 		_inputDirection = Input.GetVector("ui_left", "ui_right", "ui_up", "ui_down");
-		
+			
 		// If we detect any movement input, update last direction only if we're actually moving
 		if (_inputDirection != Vector2.Zero)
 		{
@@ -92,7 +93,7 @@ public partial class Kid : CharacterBody2D
 					float msFloat = moveSpeedObj.AsSingle();
 					if (msFloat != 0f) moveSpeedMultiplier = msFloat;
 				}
-					
+						
 				var terrain = tileData.GetTerrain();
 				if (terrain != -1)
 				{
@@ -103,10 +104,7 @@ public partial class Kid : CharacterBody2D
 						if (MudSinkingProgress > 1f)
 						{
 							MudSinkingProgress = 1.0f;
-							if (_b == null)
-							{
-								CreateBubbles();
-							}
+							CreateBubbles();
 						}
 					}
 
@@ -154,7 +152,7 @@ public partial class Kid : CharacterBody2D
 				MudSinkingProgress = 0.0f; // Reset sinking progress when not in mud
 			}
 		}
-		
+			
 		// Apply movement based on input direction
 		Velocity = _inputDirection * Speed * moveSpeedMultiplier;
 		MoveAndSlide();
@@ -205,18 +203,21 @@ public partial class Kid : CharacterBody2D
 
 	private void CreateBubbles()
 	{
-		var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
-		_b = bubblesScene.Instantiate<Bubbles>();
-		_b.FadeIn();
-		var ui = GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI");
-		ui?.AddChild(_b);
+		if (_b == null)
+		{
+			var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
+			_b = bubblesScene.Instantiate<Bubbles>();
+			_b.FadeIn();
+			var ui = GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI");
+			ui?.AddChild(_b);
+		}
 	}
-	
+		
 	private void TryInteract()
 	{
 		// Get the appropriate interaction area based on facing direction
 		Area2D activeArea = GetActiveInteractArea();
-		
+			
 		// Check for overlapping areas
 		foreach (var area in activeArea.GetOverlappingAreas())
 		{
@@ -227,7 +228,7 @@ public partial class Kid : CharacterBody2D
 				return;
 			}
 		}
-		
+			
 		foreach (var body in activeArea.GetOverlappingBodies())
 		{
 			// Try the body itself first
@@ -236,7 +237,7 @@ public partial class Kid : CharacterBody2D
 				interactable.Interact(this);
 				return;
 			}
-			
+				
 			// Try its parent
 			var parent = body.GetParent();
 			if (parent is Interactable parentInteractable)
@@ -255,7 +256,7 @@ public partial class Kid : CharacterBody2D
 			_b = null;
 		}
 	}
-	
+		
 	private Area2D GetActiveInteractArea()
 	{
 		// Determine active area based on the last direction
@@ -287,5 +288,25 @@ public partial class Kid : CharacterBody2D
 		chest.GetNode<Sprite2D>("Sprite2D")?.SetFrame(ChestPieces);
 		chest.GlobalPosition = GlobalPosition;
 		chest.StartThrow(targetPosition);
+	}
+
+	// Called by Hugger when it latches
+	public void StartHugging()
+	{
+		if (!IsBeingHugged)
+		{
+			IsBeingHugged = true;
+			CreateBubbles();
+		}
+	}
+
+	// Called by Hugger when it detaches
+	public void StopHugging()
+	{
+		if (IsBeingHugged)
+		{
+			IsBeingHugged = false;
+			DiscardBubbles();
+		}
 	}
 }
