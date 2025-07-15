@@ -7,8 +7,8 @@ public partial class Hugger : CharacterBody2D
 	[Export] public NodePath PlayerTarget;
 	[Export] public NodePath TileMapPath;
 	[Export] public float SeekSpeed = 150.0f;
-	[Export] public float AlertSpeed = 300.0f;
-	[Export] public float AttackSpeed = 200.0f;
+	[Export] public float AlertSpeed = 700.0f;
+	[Export] public float AttackSpeed = 400.0f;
 	
 	// Search radius parameters
 	[Export] public int MinSearchRadius = 2;
@@ -45,14 +45,14 @@ public partial class Hugger : CharacterBody2D
 	private Vector2 _originalPosition;
 	private Vector2 _targetPosition;
 	private Vector2 _alertSpot;
-	private List<Vector2> _currentPath = new List<Vector2>();
+	private List<Vector2> _currentPath = [];
 	private int _currentPathIndex = 0;
 	private double _stateTimer = 0.0;
 	private double _seekTimer = 0.0;
-	private double _pauseTimer = 0.0; // Timer for pausing between movements
+	private double _pauseTimer = 0.0;
 	private Vector2I _lastTilePosition;
 	private Random _random = new Random();
-	private TileMapLayer _tileMap; // Changed from TileMap to TileMapLayer
+	private TileMapLayer _tileMap;
 	private Node2D _player;
 	
 	// Tracking of other huggers for cooperative search
@@ -65,7 +65,7 @@ public partial class Hugger : CharacterBody2D
     private double _debugDirectionChangeTimer = 0.0;
 
 	// Add a function to switch between states (for testing)
-	[Export] public string DebugState = "ForceMove"; // Can be "ForceMove", "Seek", "Alert", "Attack"
+	[Export] public string DebugState = "Seek"; // Can be "ForceMove", "Seek", "Alert", "Attack"
 	
 	public override void _Ready()
 	{
@@ -327,8 +327,8 @@ public partial class Hugger : CharacterBody2D
 			}
 			else
 			{
-				// If search time exceeded, return to original position
-				ReturnToOriginalPosition();
+				// Instead of returning to original position, go to nearest available tile and resume seek
+				ReturnToNearestAvailableTileAndSeek();
 			}
 		}
 	}
@@ -406,16 +406,67 @@ public partial class Hugger : CharacterBody2D
 
 	private void ReturnToOriginalPosition()
 	{
-		_currentPath = FindPath(GlobalPosition, _originalPosition);
-		_currentPathIndex = 0;
-		
-		if (_currentPath.Count == 0)
+		// Instead of returning to original position, go to nearest available tile and resume seek
+		ReturnToNearestAvailableTileAndSeek();
+	}
+
+	// Instead of returning to original position, go to nearest available tile and resume seek
+	private void ReturnToNearestAvailableTileAndSeek()
+	{
+		Vector2I currentTile = GetTilePosition(GlobalPosition);
+		Vector2I nearestAvailable = FindNearestAvailableTile(currentTile);
+
+		// If already on a valid tile, just resume seek
+		if (nearestAvailable == currentTile)
 		{
-			// If no path found, just reset to seek state
 			_currentState = HuggerState.Seek;
 			_stateTimer = 0;
 			_seekTimer = SeekNewDestinationTime; // Force a new destination pick
+			_currentPath.Clear();
+			_currentPathIndex = 0;
+			return;
 		}
+
+		// Pathfind to nearest available tile
+		Vector2 worldPos = _tileMap.MapToLocal(nearestAvailable);
+		_currentPath = FindPath(GlobalPosition, worldPos);
+		_currentPathIndex = 0;
+
+		// After reaching the tile, resume seek state
+		_currentState = HuggerState.Seek;
+		_stateTimer = 0;
+		_seekTimer = SeekNewDestinationTime; // Force a new destination pick
+	}
+
+	// Finds the nearest available tile for movement from a given tile position
+	private Vector2I FindNearestAvailableTile(Vector2I from)
+	{
+		// If current tile is valid, return it
+		if (IsTileValidForMovement(from))
+			return from;
+
+		// Breadth-first search for nearest valid tile
+		Queue<Vector2I> queue = new Queue<Vector2I>();
+		HashSet<Vector2I> visited = new HashSet<Vector2I>();
+		queue.Enqueue(from);
+		visited.Add(from);
+
+		while (queue.Count > 0)
+		{
+			Vector2I tile = queue.Dequeue();
+			foreach (Vector2I neighbor in GetNeighbors(tile))
+			{
+				if (!visited.Contains(neighbor))
+				{
+					if (IsTileValidForMovement(neighbor))
+						return neighbor;
+					queue.Enqueue(neighbor);
+					visited.Add(neighbor);
+				}
+			}
+		}
+		// Fallback: return original tile if none found
+		return from;
 	}
 
 	private void PickRandomDestination()

@@ -27,6 +27,8 @@ public partial class Kid : CharacterBody2D
 	private Area2D _interactLeft;
 	private Area2D _interactRight;
 
+	public bool IsBeingHugged = false;
+
 	//public sbyte ChestPieces = -1; // -1 means you haven't triggered the chest break cutscene yet
 	public sbyte ChestPieces = 4; //TODO DEBUG
 
@@ -103,10 +105,7 @@ public partial class Kid : CharacterBody2D
 							MudSinkingProgress = 1.0f;
 							if (_b == null)
 							{
-								var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
-								_b = bubblesScene.Instantiate<Bubbles>();
-								_b.FadeIn();
-								GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI").AddChild(_b);
+								CreateBubbles();
 							}
 						}
 					}
@@ -135,17 +134,25 @@ public partial class Kid : CharacterBody2D
 				}
 			}
 		}
-		if (inMud) // Offset sprite down
+
+		if (inMud) // It took me 20 minutes to come up with this logic
+		{
+			// Offset sprite down out of ColorRect
 			animSprite.Offset = new Vector2(0, MudSinkingProgress * CharacterHeight); //TODO offset overwritten every frame, could cause state issues
+			if (!IsBeingHugged)
+			{
+				DiscardBubbles();
+			}
+		} 
 		else
 		{
-			if (_b != null)
+			if (!IsBeingHugged)
 			{
-				if (IsInstanceValid(_b)) _b.FadeOut();
-				_b = null;
+				DiscardBubbles();
+
+				animSprite.Offset = Vector2.Zero;
+				MudSinkingProgress = 0.0f; // Reset sinking progress when not in mud
 			}
-			animSprite.Offset = Vector2.Zero;
-			MudSinkingProgress = 0.0f; // Reset sinking progress when not in mud
 		}
 		
 		// Apply movement based on input direction
@@ -182,6 +189,7 @@ public partial class Kid : CharacterBody2D
 					animSprite.Play("walk back");
 				else
 					animSprite.Play("walk front");
+				animSprite.FlipH = false;
 			}
 			else
 			{
@@ -193,6 +201,15 @@ public partial class Kid : CharacterBody2D
 				_footstepsSound.Play();
 			}
 		}
+	}
+
+	private void CreateBubbles()
+	{
+		var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
+		_b = bubblesScene.Instantiate<Bubbles>();
+		_b.FadeIn();
+		var ui = GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI");
+		ui?.AddChild(_b);
 	}
 	
 	private void TryInteract()
@@ -229,6 +246,15 @@ public partial class Kid : CharacterBody2D
 			}
 		}
 	}
+
+	private void DiscardBubbles()
+	{
+		if (_b != null)
+		{
+			if (IsInstanceValid(_b)) _b.FadeOut();
+			_b = null;
+		}
+	}
 	
 	private Area2D GetActiveInteractArea()
 	{
@@ -247,10 +273,8 @@ public partial class Kid : CharacterBody2D
 	{
 		// stop movement
 		_inputDirection = Vector2.Zero;
-		if (_footstepsSound.Playing)
-			_footstepsSound.Stop();
-		if (_animatedSprite.IsPlaying())
-			_animatedSprite.Stop();
+		_footstepsSound.Stop();
+		_animatedSprite.Stop();
 	}
 
 	// Method to spawn and throw a chest piece

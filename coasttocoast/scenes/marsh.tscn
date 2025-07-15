@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=4 uid="uid://4nw4qruc78m4"]
+[gd_scene load_steps=8 format=4 uid="uid://4nw4qruc78m4"]
 
 [ext_resource type="PackedScene" uid="uid://b3ughkflkrjp1" path="res://scenes/kid.tscn" id="1_7ohpu"]
 [ext_resource type="PackedScene" uid="uid://dc3ojttnxboho" path="res://scenes/marsh_tiles.tscn" id="1_ykp4d"]
 [ext_resource type="Script" uid="uid://gitt1q04prc" path="res://scenes/MarshDialogAreas.cs" id="4_8yq56"]
 [ext_resource type="PackedScene" uid="uid://b3no0a60c3nxj" path="res://scenes/chest_break.tscn" id="4_j2stp"]
+[ext_resource type="PackedScene" uid="uid://hobnnwfwqkmv" path="res://scenes/hugger.tscn" id="5_8yq56"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rkyai"]
 size = Vector2(37.6749, 572.6)
@@ -46,3 +47,8 @@ position = Vector2(-2558.41, 59.5928)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MarshDialogAreas/BeforeSticks"]
 position = Vector2(57.9102, 100.907)
 shape = SubResource("RectangleShape2D_j2stp")
+
+[node name="Hugger" parent="." instance=ExtResource("5_8yq56")]
+position = Vector2(-60, -1705)
+PlayerTarget = NodePath("../kiddo")
+TileMapPath = NodePath("../Feature")
