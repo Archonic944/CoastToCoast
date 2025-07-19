@@ -29,9 +29,10 @@ public partial class Kid : CharacterBody2D
 	private Area2D _interactRight;
 
 	public bool IsBeingHugged = false;
+	//TODO debnug
+	public sbyte ChestPieces = 4;
 
-	//public sbyte ChestPieces = -1; // -1 means you haven't triggered the chest break cutscene yet
-	public sbyte ChestPieces = 4; //TODO DEBUG
+	public byte iframes = 0;
 
 	public override void _Ready()
 	{
@@ -68,8 +69,10 @@ public partial class Kid : CharacterBody2D
 		}
 		if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left && mb.Pressed)
 		{
+			GD.Print("Detected left mouse button click");
 			if (ChestPieces > 0)
 			{
+				GD.Print("Throwing chest piece");
 				ThrowChestPiece(GetGlobalMousePosition());
 			}
 		}
@@ -77,6 +80,7 @@ public partial class Kid : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if(iframes > 0) iframes--;
 		var animSprite = _animatedSprite; // replaced local GetNode
 		var inMud = false;
 		float moveSpeedMultiplier = 1.0f;
@@ -104,7 +108,7 @@ public partial class Kid : CharacterBody2D
 						if (MudSinkingProgress > 1f)
 						{
 							MudSinkingProgress = 1.0f;
-							CreateBubbles();
+							TryGetBubbles().Drowning = true;
 						}
 					}
 
@@ -133,24 +137,19 @@ public partial class Kid : CharacterBody2D
 			}
 		}
 
-		if (inMud) // It took me 20 minutes to come up with this logic
+		if (inMud)
 		{
-			// Offset sprite down out of ColorRect
-			animSprite.Offset = new Vector2(0, MudSinkingProgress * CharacterHeight); //TODO offset overwritten every frame, could cause state issues
-			if (!IsBeingHugged)
-			{
-				DiscardBubbles();
-			}
-		} 
-		else
+			// Offset sprite down out of ColorRect, clips children
+			animSprite.Offset = new Vector2(0, MudSinkingProgress * CharacterHeight); //TODO Offset overwritten every frame, could cause state issues
+		}else
 		{
-			if (!IsBeingHugged)
-			{
-				DiscardBubbles();
-
-				animSprite.Offset = Vector2.Zero;
-				MudSinkingProgress = 0.0f; // Reset sinking progress when not in mud
-			}
+			MudSinkingProgress = 0.0f;
+			animSprite.Offset = Vector2.Zero;
+		}
+		
+		if (!IsBeingHugged && MudSinkingProgress < 1.0f)
+		{
+			DiscardBubbles();
 		}
 			
 		// Apply movement based on input direction
@@ -167,6 +166,7 @@ public partial class Kid : CharacterBody2D
 					animSprite.Play("idle back");
 				else
 					animSprite.Play("idle front");
+				animSprite.FlipH = false;
 			}
 			else
 			{
@@ -203,14 +203,11 @@ public partial class Kid : CharacterBody2D
 
 	private void CreateBubbles()
 	{
-		if (_b == null)
-		{
-			var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
-			_b = bubblesScene.Instantiate<Bubbles>();
-			_b.FadeIn();
-			var ui = GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI");
-			ui?.AddChild(_b);
-		}
+		var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
+		_b = bubblesScene.Instantiate<Bubbles>();
+		_b.FadeIn();
+		var ui = GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI");
+		ui?.AddChild(_b);
 	}
 		
 	private void TryInteract()
@@ -247,13 +244,29 @@ public partial class Kid : CharacterBody2D
 			}
 		}
 	}
+	
+	private Bubbles TryGetBubbles()
+	{
+		// Lazy initialization with validity check
+		if (_b == null || !IsInstanceValid(_b))
+		{
+			CreateBubbles();
+			return _b;
+		}
+		else
+		{
+			return _b;
+		}
+	}
 
 	private void DiscardBubbles()
 	{
 		if (_b != null)
 		{
-			if (IsInstanceValid(_b)) _b.FadeOut();
-			_b = null;
+			if (IsInstanceValid(_b))
+			{
+				TryGetBubbles().Drowning = false;
+			}
 		}
 	}
 		
@@ -296,7 +309,7 @@ public partial class Kid : CharacterBody2D
 		if (!IsBeingHugged)
 		{
 			IsBeingHugged = true;
-			CreateBubbles();
+			TryGetBubbles().Drowning = true;
 		}
 	}
 

@@ -11,6 +11,7 @@ public partial class RainSpawner : Node2D
 	[Export] public float RaindropSpeed { get; set; } = 2500.0f;
 	[Export] public float RainAngle { get; set; } = 2 * Mathf.Pi / 3.0f; // Changed to 2π/3 (120 degrees) to fall down and to the left
 	[Export] public float RainHeight { get; set; } = 4000f; // How far above the target to spawn raindrops
+	[Export] public bool Disabled { get; set; } = false; // If true, the rain spawner will not spawn rain
 
 	private const float DropletHeightSeparation = 150.0f; // Random height separation between raindrops
 
@@ -38,7 +39,7 @@ public partial class RainSpawner : Node2D
 
 	private void OnTimerTimeout()
 	{
-		MakeItRain();
+		if (!Disabled) MakeItRain();
 		// Reset timer with slight randomization
 		_timer.WaitTime = SpawnInterval + GD.RandRange(-3.0, 3.0);
 		_timer.Start();

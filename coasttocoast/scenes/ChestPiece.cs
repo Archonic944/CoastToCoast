@@ -79,7 +79,7 @@ public partial class ChestPiece : Node2D, Interactable
 				// alert nearest huggers
 				var huggers = GetTree().GetNodesInGroup("huggers").OfType<Hugger>()
 					.OrderBy(h => h.GlobalPosition.DistanceTo(GlobalPosition))
-					.Take(5);
+					.Take(2);
 				foreach (var h in huggers)
 					h.Alert(GlobalPosition);
 			}

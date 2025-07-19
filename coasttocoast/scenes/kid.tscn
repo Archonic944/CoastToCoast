@@ -221,7 +221,7 @@ drag_vertical_offset = -1.0
 editor_description = "Points for the Hugger enemy to attach to"
 
 [node name="0" type="Node2D" parent="HuggerAttachPoints"]
-position = Vector2(0, -58)
+position = Vector2(3.47344, -116.36)
 
 [node name="1" type="Node2D" parent="HuggerAttachPoints"]
 position = Vector2(-14, -78)

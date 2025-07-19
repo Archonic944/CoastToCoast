@@ -62,6 +62,7 @@ public partial class Raindrop : Node2D
     {
         if (animName == "raindrop_splash")
         {
+            GetTree().CallGroup("huggers", "RaindropAt", GlobalPosition);
             QueueFree(); // Remove the raindrop when animation finishes
         }
     }

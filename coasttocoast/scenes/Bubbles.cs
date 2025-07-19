@@ -29,22 +29,36 @@ public partial class Bubbles : Control
 			t.Start();
 			t.Timeout += () =>
 			{
-				if (!Drowning) return;
-				currentBubble.Pop();
-				GetNode<AudioStreamPlayer>("PopSound").Play();
-				Node bList = GetNode("BubblesList");
-				
-				if (bList.GetChildCount() <= 1)
+				if (!Drowning)
 				{
-					t.Stop();
-					EmitSignal("drowned");
-					FadeOut();
+					if (GetNode("BubblesList").GetChildCount() >= BubbleCount)
+					{
+						FadeOut();
+						t.Stop();
+					}
+					else
+					{
+						NewBubble();
+					}
 				}
 				else
 				{
-					currentBubble = bList.GetChild<Bubble>(-2);
-					currentBubble.Shake = true;
-					t.Start();
+					currentBubble.Pop();
+					GetNode<AudioStreamPlayer>("PopSound").Play();
+					Node bList = GetNode("BubblesList");
+
+					if (bList.GetChildCount() <= 1)
+					{
+						t.Stop();
+						EmitSignal("drowned");
+						FadeOut();
+					}
+					else
+					{
+						currentBubble = bList.GetChild<Bubble>(-2);
+						currentBubble.Shake = true;
+						t.Start();
+					}
 				}
 			};
 		}
@@ -62,16 +76,27 @@ public partial class Bubbles : Control
 	{
 		Drowning = false;
 		// set bubbles to not shake
-		foreach (Node child in GetNode("BubblesList").GetChildren())
+		// foreach (Node child in GetNode("BubblesList").GetChildren())
+		// {
+		// 	if(child is Bubble bubble)
+		// 	{
+		// 		bubble.Shake = false;
+		// 	}
+		// }
+		// Tween t = CreateTween();
+		// t.TweenProperty(this, "modulate", Colors.Transparent, 0.5f);
+		// t.Finished += QueueFree;
+		QueueFree();
+	}
+
+	private void NewBubble()
+	{
+		if (currentBubble.Duplicate() is Bubble newBubble)
 		{
-			if(child is Bubble bubble)
-			{
-				bubble.Shake = false;
-			}
+			newBubble.Position += Vector2.Right * 80;
+			GetNode("BubblesList").AddChild(newBubble);
+			currentBubble = newBubble;
 		}
-		Tween t = CreateTween();
-		t.TweenProperty(this, "modulate", Colors.Transparent, 0.5f);
-		t.Finished += QueueFree;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://w5e12w66n7n7"
+path="res://.godot/imported/Rain.dialogue-b92076650cf3f80c0173846377e25895.tres"
+
+[deps]
+
+source_file="res://dialogue/Rain.dialogue"
+dest_files=["res://.godot/imported/Rain.dialogue-b92076650cf3f80c0173846377e25895.tres"]
+
+[params]
+
+defaults=true
