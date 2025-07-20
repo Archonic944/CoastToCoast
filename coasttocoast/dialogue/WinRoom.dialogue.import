@@ -1,0 +1,16 @@
+[remap]
+
+importer="dialogue_manager"
+importer_version=15
+type="Resource"
+uid="uid://djf6icyy6y1dc"
+path="res://.godot/imported/WinRoom.dialogue-d923ab28933165efe990bc54e1cf0d0e.tres"
+
+[deps]
+
+source_file="res://dialogue/WinRoom.dialogue"
+dest_files=["res://.godot/imported/WinRoom.dialogue-d923ab28933165efe990bc54e1cf0d0e.tres"]
+
+[params]
+
+defaults=true

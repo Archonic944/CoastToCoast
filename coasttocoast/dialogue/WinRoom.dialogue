@@ -1,0 +1,14 @@
+~ signpost
+if not DialogFunctions.HasWon()
+	Dad: This sign is so short. I can barely read it:
+	Dad: 'Congrats, kid! You reached the [color=gold]WIN ROOM![/color]'
+	Dad: What the heck is that supposed to mean?
+	do DialogFunctions.Win()
+else
+	Dad: Stupid short sign… stupid win room… Hmph.
+	Dad: It's kinda nice, though… having won.
+=> END
+
+~ tryleave
+(It feels wrong to leave the [color=gold]WIN ROOM.[/color])
+=> END

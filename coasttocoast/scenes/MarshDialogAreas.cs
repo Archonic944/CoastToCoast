@@ -32,7 +32,16 @@ public partial class MarshDialogAreas : Node2D
 				DoDialogue(disease, "res://dialogue/Misc.dialogue", "disease");
 			}
 		};
-		//ugh I could've written a generic method for this
+		Area2D winRoom = GetNode<Area2D>("WinRoomExit");
+		winRoom.BodyEntered += (body) =>
+		{
+			if (body is Kid)
+			{
+				if(GetTree().GetCurrentScene().GetMeta("win").AsBool()) 
+				{DoDialogue(winRoom, "res://dialogue/WinRoom.dialogue", "tryleave");}
+			}
+		};
+		// ugh I could've written a generic method for this
 		// but I didn't
 		// so here we are
 		// and I don't want to refactor it now

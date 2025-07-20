@@ -4,6 +4,6 @@ Dad: I bet it's my ankylosing spondylitis. Definitely not an incomplete spritesh
 => END
 
 ~ drowned
-[color=aqua]You drowned.[/color]
+[color=aqua]You drowned.[/color] Press [color=yellow]space[/color] to continue.
 do DialogFunctions.Respawn()
 => END

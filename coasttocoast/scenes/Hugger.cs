@@ -266,7 +266,12 @@ public partial class Hugger : CharacterBody2D
             if (!good)
             {
                 _badStateTimer += delta;
-                if (_badStateTimer > _badThreshold) { FOff(); return; }
+                if (_badStateTimer > _badThreshold)
+                {
+                    kid.StopHugging();
+                    FOff(); 
+                    return;
+                }
             }
             else _isLatching = true;
         }
@@ -293,10 +298,10 @@ public partial class Hugger : CharacterBody2D
             Velocity = Vector2.Zero;
             _latchTimer += delta;
             GetNode<Sprite2D>("Sprite2D").Offset = new Vector2(2 * GD.Randf() - 0.5f, 2 * GD.Randf() - 0.5f);
-            if (_latchTimer > _detachTime || (kid != null && kid.MudSinkingProgress >= 1.0f))
+            if (_latchTimer > _detachTime || kid is { MudSinkingProgress: >= 1.0f })
             {
-                kid?.StopHugging();
-                if (kid != null) kid.iframes = 30;
+                kid.StopHugging();
+                kid.iframes = 30;
                 FOff();
             }
             return;
@@ -319,6 +324,13 @@ public partial class Hugger : CharacterBody2D
 
     private void SwitchToAlertState(Vector2 alertLocation)
     {
+        if (_isLatched)
+        {
+            (_player as Kid)?.StopHugging();
+            _isLatched = false;
+            _isLatching = false;
+            _latchTimer = 0.0;
+        }
         _currentState = HuggerState.AlertTravel;
         _alertSpot = alertLocation;
         _stateTimer = 0.0;

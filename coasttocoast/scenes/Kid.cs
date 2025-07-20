@@ -29,8 +29,7 @@ public partial class Kid : CharacterBody2D
 	private Area2D _interactRight;
 
 	public bool IsBeingHugged = false;
-	//TODO debnug
-	public sbyte ChestPieces = 4;
+	public sbyte ChestPieces = 0;
 
 	public byte iframes = 0;
 

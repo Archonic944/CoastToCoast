@@ -46,4 +46,14 @@ public partial class DialogFunctions : Node
 	{
 		GetTree().ChangeSceneToFile("res://scenes/marsh.tscn");
 	}
+
+	public void Win()
+	{
+		GetTree().GetCurrentScene().SetMeta("win", true);
+	}
+
+	public bool HasWon()
+	{
+		return (bool) GetTree().GetCurrentScene().GetMeta("win");
+	}
 }
