@@ -1,0 +1,48 @@
+[gd_scene load_steps=4 format=3 uid="uid://bys2lji5gp8vf"]
+
+[ext_resource type="Texture2D" uid="uid://diq1funj5vytb" path="res://images/bg/clouds/N2_22.png" id="1_p3a86"]
+[ext_resource type="Texture2D" uid="uid://cavhvcxdttlni" path="res://images/bg/clouds/N2_18.png" id="2_ykj67"]
+[ext_resource type="Texture2D" uid="uid://bjcitbmhgueaf" path="res://images/bg/clouds/N2_25.png" id="3_55af2"]
+
+[node name="ParallaxFog" type="ParallaxBackground"]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="."]
+texture_repeat = 2
+motion_scale = Vector2(1.88, 1.425)
+
+[node name="N222" type="TextureRect" parent="ParallaxLayer"]
+modulate = Color(1, 1, 1, 0.384314)
+texture_repeat = 2
+offset_left = -19543.0
+offset_top = -11082.0
+offset_right = 24116.0
+offset_bottom = 12511.0
+texture = ExtResource("1_p3a86")
+stretch_mode = 1
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(1.47, 1.27)
+
+[node name="N218" type="TextureRect" parent="ParallaxLayer2"]
+modulate = Color(1, 1, 1, 0.364706)
+texture_repeat = 2
+offset_left = -19018.0
+offset_top = -10535.0
+offset_right = 23655.0
+offset_bottom = 12649.0
+texture = ExtResource("2_ykj67")
+stretch_mode = 1
+
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="."]
+motion_scale = Vector2(0.955, 0.44)
+
+[node name="N225" type="TextureRect" parent="ParallaxLayer3"]
+modulate = Color(1, 1, 1, 0.352941)
+texture_repeat = 2
+offset_left = -18343.0
+offset_top = -10377.0
+offset_right = 6922.0
+offset_bottom = 3503.0
+scale = Vector2(1.64, 1.64)
+texture = ExtResource("3_55af2")
+stretch_mode = 1

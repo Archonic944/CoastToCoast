@@ -13,12 +13,3 @@ PlayerTarget = NodePath("")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-3, -5)
 texture = ExtResource("1_sb6e6")
-
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-z_index = 3
-offset_left = -31.0
-offset_top = -59.0
-offset_right = 148.66
-offset_bottom = -19.0
-text = "state"
-fit_content = true

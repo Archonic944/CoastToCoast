@@ -39,5 +39,11 @@ public partial class DialogFunctions : Node
 		chest.GetNode<Sprite2D>("ChestSprite").Hide();
 		chest.GetNode<AudioStreamPlayer2D>("ItemPickup").Play();
 		marsh.GetNode<Kid>("kiddo").ChestPieces = 4;
+		GetTree().GetCurrentScene().GetNode<Node2D>("UI/ChestPieceHUD")?.Show();
+	}
+
+	public void Respawn()
+	{
+		GetTree().ChangeSceneToFile("res://scenes/marsh.tscn");
 	}
 }

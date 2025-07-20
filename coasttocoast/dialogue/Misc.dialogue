@@ -1,0 +1,9 @@
+~ disease
+Dad: For some reason, I can't turn around to look behind me.
+Dad: I bet it's my ankylosing spondylitis. Definitely not an incomplete spritesheet.
+=> END
+
+~ drowned
+[color=aqua]You drowned.[/color]
+do DialogFunctions.Respawn()
+=> END

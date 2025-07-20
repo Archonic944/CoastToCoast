@@ -93,8 +93,11 @@ public partial class ChestPiece : Node2D, Interactable
 			GetNode<Area2D>("Area2D").Monitorable = false;
 			GetNode<AudioStreamPlayer>("PickupPiece").Play();
 			if (player is Kid kid)
+			{
 				kid.ChestPieces++;
-			// Pickup animation (tween chest piece to scale smaller and smaller and move towards player)
+				GetTree().GetCurrentScene().GetNode<RichTextLabel>("UI/ChestPieceHUD/RichTextLabel")?.SetText(kid.ChestPieces + "/4");
+			}
+			// Pickup animation (Tween the chest piece to scale smaller and smaller and move towards player)
 			var tween = CreateTween();
 			tween.SetParallel();
 			tween.TweenProperty(this, "scale", new Vector2(0.1f, 0.1f), 0.3f)

@@ -67,7 +67,7 @@ public partial class Kid : CharacterBody2D
 		{
 			TryInteract();
 		}
-		if (@event is InputEventMouseButton mb && mb.ButtonIndex == MouseButton.Left && mb.Pressed)
+		if (@event is InputEventMouseButton { ButtonIndex: MouseButton.Left, Pressed: true })
 		{
 			GD.Print("Detected left mouse button click");
 			if (ChestPieces > 0)
@@ -206,6 +206,14 @@ public partial class Kid : CharacterBody2D
 		var bubblesScene = GD.Load<PackedScene>("res://scenes/bubbles.tscn");
 		_b = bubblesScene.Instantiate<Bubbles>();
 		_b.FadeIn();
+		// attach to drowned signal with game over
+		_b.Drowned += () =>
+		{
+			CreateTween().TweenProperty(GetTree().GetCurrentScene(), "modulate", Colors.Transparent, 1f).Finished +=
+				() => {
+					DialogueManager.ShowDialogueBalloon(GD.Load("res://dialogue/Misc.dialogue"), "drowned");
+				};
+		};
 		var ui = GetTree().GetCurrentScene().GetNode<CanvasLayer>("UI");
 		ui?.AddChild(_b);
 	}
@@ -295,6 +303,7 @@ public partial class Kid : CharacterBody2D
 	private void ThrowChestPiece(Vector2 targetPosition)
 	{
 		ChestPieces--;
+		GetTree().GetCurrentScene().GetNode<RichTextLabel>("UI/ChestPieceHUD/RichTextLabel")?.SetText(ChestPieces + "/4");
 		var chestScene = GD.Load<PackedScene>("res://scenes/chest_piece.tscn");
 		var chest = chestScene.Instantiate<ChestPiece>();
 		GetTree().GetCurrentScene().AddChild(chest);

@@ -154,8 +154,11 @@ public partial class Hugger : CharacterBody2D
         }
         var playerTile = GetTilePosition(_player.GlobalPosition);
         var myTile = GetTilePosition(GlobalPosition);
-        if (_currentState != HuggerState.Attack && _currentState != HuggerState.AlertTravel && IsPlayerInDetectionRadius(myTile, playerTile, AttackDetectionRadius))
+        if (_currentState != HuggerState.Attack && _currentState != HuggerState.AlertTravel &&
+            _player is not Kid {MudSinkingProgress:>=1.0f} && IsPlayerInDetectionRadius(myTile, playerTile, AttackDetectionRadius))
+        {
             SwitchToAttackState();
+        }
         MoveAndSlide();
     }
 
@@ -169,7 +172,7 @@ public partial class Hugger : CharacterBody2D
         _latchTimer = 0.0;
         _badStateTimer = 0.0;
         _detachTime = 7.0 + _random.NextDouble() * 3.0;
-        _badThreshold = 3.0 + _random.NextDouble() * 2.0;
+        _badThreshold = 1.0 + _random.NextDouble() * 2.0;
     }
 
     private void HandleSeekState(double delta)
@@ -263,7 +266,7 @@ public partial class Hugger : CharacterBody2D
             if (!good)
             {
                 _badStateTimer += delta;
-                if (_badStateTimer > _badThreshold) { ReturnToSeekState(); return; }
+                if (_badStateTimer > _badThreshold) { FOff(); return; }
             }
             else _isLatching = true;
         }
@@ -294,11 +297,7 @@ public partial class Hugger : CharacterBody2D
             {
                 kid?.StopHugging();
                 if (kid != null) kid.iframes = 30;
-                var randomLocal = _tileMap.ToLocal(GlobalPosition + new Vector2(GD.Randf()*1000 - 500, GD.Randf()*1000 - 500));
-                var closest = _astar.GetClosestPoint(randomLocal);
-                var localPos = _astar.GetPointPosition(closest);
-                var worldPos = _tileMap.ToGlobal(localPos);
-                SwitchToAlertState(worldPos);
+                FOff();
             }
             return;
         }
@@ -307,6 +306,15 @@ public partial class Hugger : CharacterBody2D
         if (dist > 150) Velocity = to.Normalized() * AttackSpeed;
         else if (dist < 100) Velocity = -to.Normalized() * (AttackSpeed * 0.7f);
         else Velocity = new Vector2(-to.Y, to.X).Normalized() * AttackSpeed;
+    }
+
+    private void FOff()
+    {
+        var randomLocal = _tileMap.ToLocal(GlobalPosition + new Vector2(GD.Randf()*1000 - 500, GD.Randf()*1000 - 500));
+        var closest = _astar.GetClosestPoint(randomLocal);
+        var localPos = _astar.GetPointPosition(closest);
+        var worldPos = _tileMap.ToGlobal(localPos);
+        SwitchToAlertState(worldPos);
     }
 
     private void SwitchToAlertState(Vector2 alertLocation)

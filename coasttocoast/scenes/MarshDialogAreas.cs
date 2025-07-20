@@ -24,6 +24,24 @@ public partial class MarshDialogAreas : Node2D
 				DoDialogue(afterSticks, "res://dialogue/Sticks.dialogue", "after_sticks");
 			}
 		};
+		Area2D disease = GetNode<Area2D>("Disease");
+		disease.BodyEntered += (body) =>
+		{
+			if (body is Kid)
+			{
+				DoDialogue(disease, "res://dialogue/Misc.dialogue", "disease");
+			}
+		};
+		//ugh I could've written a generic method for this
+		// but I didn't
+		// so here we are
+		// and I don't want to refactor it now
+		// but I will later
+		// well
+		// maybe not later
+		// but at some point
+		// well
+		// maybe not at all
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

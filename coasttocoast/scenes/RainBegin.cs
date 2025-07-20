@@ -13,11 +13,10 @@ public partial class RainBegin : Area2D
 			if (body is Kid)
 			{
 				GetParent().GetNode<RainSpawner>("RainSpawner").Disabled = false;
+				GetParent().GetNode<AudioStreamPlayer>("RainAmbience").Play();
+				DialogueManager.ShowDialogueBalloon(GD.Load("res://dialogue/Rain.dialogue"), "start");
+				QueueFree();
 			}
-
-			GetParent().GetNode<AudioStreamPlayer>("RainAmbience").Play();
-			DialogueManager.ShowDialogueBalloon(GD.Load("res://dialogue/Rain.dialogue"), "start");
-			QueueFree();
 		});
 	}
 

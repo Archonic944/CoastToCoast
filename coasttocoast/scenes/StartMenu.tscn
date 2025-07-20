@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3 uid="uid://c31nn7itdvcjx"]
+
+[ext_resource type="Script" uid="uid://bg1vvdg78hpph" path="res://scenes/StartMenu.cs" id="1_kmax6"]
+[ext_resource type="Texture2D" uid="uid://cdp8ycuc118nb" path="res://images/bg/sunset-marsh.jpg" id="2_cp7se"]
+[ext_resource type="AudioStream" uid="uid://blnvvy24d1tjp" path="res://audio/ambient/title_screen_ambience.mp3" id="3_cp7se"]
+
+[node name="StartMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1152.0
+offset_bottom = -648.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_kmax6")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1271.0
+scale = Vector2(0.611451, 0.520302)
+texture = ExtResource("2_cp7se")
+
+[node name="Button" type="Button" parent="."]
+layout_mode = 0
+offset_left = 481.0
+offset_top = 372.0
+offset_right = 728.0
+offset_bottom = 517.0
+theme_override_font_sizes/font_size = 40
+text = "𝓼𝓽𝓪𝓻𝓽"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 319.0
+offset_top = 168.0
+offset_right = 894.0
+offset_bottom = 328.0
+theme_override_colors/font_outline_color = Color(0.533836, 0.340344, 0, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 6
+theme_override_constants/shadow_offset_y = 4
+theme_override_constants/shadow_offset_x = 4
+theme_override_font_sizes/bold_italics_font_size = 0
+theme_override_font_sizes/normal_font_size = 70
+theme_override_font_sizes/bold_font_size = 70
+bbcode_enabled = true
+text = "THE [color=brown][wave]MARSH[/wave][/color]"
+horizontal_alignment = 1
+
+[node name="RichTextLabel2" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 243.0
+offset_top = 568.0
+offset_right = 967.0
+offset_bottom = 643.0
+bbcode_enabled = true
+text = "a short, experimental game
+by archonic, with spritework from tomio"
+fit_content = true
+horizontal_alignment = 1
+
+[node name="TitleScreenAmbience" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_cp7se")
+autoplay = true

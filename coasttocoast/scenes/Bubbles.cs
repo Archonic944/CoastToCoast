@@ -8,6 +8,9 @@ public partial class Bubbles : Control
 	public int BubbleCount { get; set; } = 6;
 	// Called when the node enters the scene tree for the first time.
 	private Bubble currentBubble;
+
+	[Signal]
+	public delegate void DrownedEventHandler();
 	public override void _Ready()
 	{
 		AddUserSignal("drowned");
@@ -50,7 +53,7 @@ public partial class Bubbles : Control
 					if (bList.GetChildCount() <= 1)
 					{
 						t.Stop();
-						EmitSignal("drowned");
+						EmitSignal(SignalName.Drowned);
 						FadeOut();
 					}
 					else
