@@ -78,8 +78,8 @@ public partial class ChestPiece : Node2D, Interactable
 				shakePlayer.Play();
 				// alert nearest huggers
 				var huggers = GetTree().GetNodesInGroup("huggers").OfType<Hugger>()
-					.OrderBy(h => h.GlobalPosition.DistanceTo(GlobalPosition))
-					.Take(2);
+					.Where(h => h.GlobalPosition.DistanceTo(GlobalPosition) <= 800)
+					.Take(5);
 				foreach (var h in huggers)
 					h.Alert(GlobalPosition);
 			}

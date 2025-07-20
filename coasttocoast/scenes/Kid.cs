@@ -298,6 +298,11 @@ public partial class Kid : CharacterBody2D
 		_animatedSprite.Stop();
 	}
 
+	public override void _ExitTree()
+	{
+		DialogueManager.DialogueStarted -= OnDialogueStarted;
+	}
+
 	// Method to spawn and throw a chest piece
 	private void ThrowChestPiece(Vector2 targetPosition)
 	{
